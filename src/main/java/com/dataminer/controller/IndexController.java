@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import com.dataminer.algorithm.AlgoAprioriClose;
 import com.dataminer.algorithm.lcm.AlgoLCM;
 import com.dataminer.algorithm.lcm.Dataset;
 import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
+import com.dataminer.entity.LogFile;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
 
 /**
@@ -70,23 +72,26 @@ public class IndexController extends BaseController {
 
 	private void processInputFile() {
 		String filePath = fileToPath(this.debugReadFile);
+		LogFile logFile = new LogFile();
 		// read file into stream, try-with-resources
 
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(filePath), StandardCharsets.ISO_8859_1)) {
 			String line;
 			String tempText;
-			int counter = 0;
-			while ((line = br.readLine()) != null) {
-				tempText = new String(line.getBytes("Cp1252"), "Cp1251");
-				System.out.println(tempText);
-				counter++;
-				if (counter >= 20) {
-					break;
+			for (int i = 0; (line = br.readLine()) != null; i++) {
+				if (i == 0) {
+					continue;
 				}
+
+				tempText = new String(line.getBytes("Cp1252"), "Cp1251");
+				logFile.addLine(tempText);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		// System.out.println(logFile.toString());
+		System.out.println("Successfully created " + logFile.getUserSessionList().size() + " user session!");
 	}
 
 
