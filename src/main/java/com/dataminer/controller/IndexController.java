@@ -25,11 +25,14 @@ import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
 import com.dataminer.entity.LogFile;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  *
  * @author Vasil.Dimitrov^2
  *
  */
+@Slf4j
 @Controller
 public class IndexController extends BaseController {
 	private int status = 0;
@@ -38,7 +41,7 @@ public class IndexController extends BaseController {
 
 	@GetMapping({ "/", "/index" })
 	public ModelAndView showIndexPage(ModelAndView modelAndView) {
-		processInputFile();
+		// processInputFile();
 		return view("index");
 	}
 
@@ -52,15 +55,13 @@ public class IndexController extends BaseController {
 		try {
 			appleSauce = new String(file.getBytes());
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			log.debug(e1.getMessage());
 		}
 
 		try {
 			fileValue = new String(appleSauce.getBytes("Cp1252"), "Cp1251");
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			log.debug(e.getMessage());
 		}
 
 		System.out.println(appleSauce);
@@ -87,7 +88,7 @@ public class IndexController extends BaseController {
 				logFile.addLine(tempText);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.debug(e.getMessage());
 		}
 
 		// System.out.println(logFile.toString());
@@ -126,7 +127,7 @@ public class IndexController extends BaseController {
 			result.printItemsets();
 			this.status = 1;
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.debug(e.getMessage());
 		}
 
 		return "Apriori run completed with status " + this.status;
@@ -153,9 +154,9 @@ public class IndexController extends BaseController {
 			itemsets.printItemsets();
 			this.status = 1;
 		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
+			log.debug(e1.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.debug(e.getMessage());
 		}
 
 		return "LCM run completed with status " + this.status;
@@ -187,9 +188,9 @@ public class IndexController extends BaseController {
 			patterns.printItemsets();
 			this.status = 1;
 		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
+			log.debug(e1.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.debug(e.getMessage());
 		}
 
 		return "RPGrowth run completed with status " + this.status;

@@ -1,5 +1,6 @@
 package com.dataminer.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +17,9 @@ public class UserSession {
 
 	private List<UserEvent> userEventList = new ArrayList<>();
 
-	public UserSession(String userEventData[]) {
-		this.ip = userEventData[Constant.LOG_FILE_IP_POSITION];
-		this.userEventList.add(new UserEvent(userEventData));
+	public UserSession(String ip, LocalDateTime dateTime, Integer eventContextKey) {
+		this.ip = ip;
+		this.userEventList.add(new UserEvent(dateTime, eventContextKey));
 	}
 
 	@Override
