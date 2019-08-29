@@ -36,12 +36,12 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class IndexController extends BaseController {
 	private int status = 0;
-	private String debugFile = "contextPasquier99.txt";
+	private String debugFile = "contextPasquier99-repeating.txt";
 	private String debugReadFile = "logs_BCS37_20181103_UTF-8.csv";
 
 	@GetMapping({ "/", "/index" })
 	public ModelAndView showIndexPage(ModelAndView modelAndView) {
-		// processInputFile();
+		processInputFile();
 		return view("index");
 	}
 
@@ -74,7 +74,6 @@ public class IndexController extends BaseController {
 	private void processInputFile() {
 		String filePath = fileToPath(this.debugReadFile);
 		LogFile logFile = new LogFile();
-		// read file into stream, try-with-resources
 
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(filePath), StandardCharsets.ISO_8859_1)) {
 			String line;
@@ -90,8 +89,9 @@ public class IndexController extends BaseController {
 		} catch (IOException e) {
 			log.debug(e.getMessage());
 		}
+		runLCMWithLog(logFile);
 
-		// System.out.println(logFile.toString());
+		System.out.println(logFile.toString());
 		System.out.println("Successfully created " + logFile.getUserSessionList().size() + " user session!");
 	}
 
@@ -102,6 +102,8 @@ public class IndexController extends BaseController {
 
 		return "views/loginForm";
 	}
+
+	/////////// DEBUG ALGORITHMS
 
 	@RequestMapping(value = "/runApriori", method = RequestMethod.GET)
 	@ResponseBody
@@ -148,6 +150,29 @@ public class IndexController extends BaseController {
 			AlgoLCM algo = new AlgoLCM();
 			// if true in next line it will find only closed itemsets, otherwise, all frequent
 			// itemsets
+			Itemsets itemsets = algo.runAlgorithm(minsup, dataset, null);
+			algo.printStats();
+
+			itemsets.printItemsets();
+			this.status = 1;
+		} catch (UnsupportedEncodingException e1) {
+			log.debug(e1.getMessage());
+		} catch (IOException e) {
+			log.debug(e.getMessage());
+		}
+
+		return "LCM run completed with status " + this.status;
+	}
+
+	public String runLCMWithLog(LogFile logFile) {
+		Dataset dataset = new Dataset(logFile);
+		double minsup = 0.4; // means a minsup of 2 transaction (we used a relative support)
+
+		// Applying the algorithm
+		AlgoLCM algo = new AlgoLCM();
+		// if true in next line it will find only closed itemsets, otherwise, all frequent
+		// itemsets
+		try {
 			Itemsets itemsets = algo.runAlgorithm(minsup, dataset, null);
 			algo.printStats();
 

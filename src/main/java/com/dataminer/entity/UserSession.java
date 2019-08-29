@@ -3,8 +3,10 @@ package com.dataminer.entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import com.dataminer.constant.Constant;
+import org.springframework.util.CollectionUtils;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,11 +17,31 @@ public class UserSession {
 
 	private String ip;
 
-	private List<UserEvent> userEventList = new ArrayList<>();
+	// private List<UserEvent> userEventList = new ArrayList<>();
+
+	private List<LocalDateTime> dateTimeList = new ArrayList<>();
+
+	private SortedSet<Integer> eventContextKeySet = new TreeSet<>();
+
+	/*- not needed for the moment so commented out to preserve memory
+	List<String> component;
+
+	List<String> eventName;
+
+	List<String> description;
+	 */
 
 	public UserSession(String ip, LocalDateTime dateTime, Integer eventContextKey) {
 		this.ip = ip;
-		this.userEventList.add(new UserEvent(dateTime, eventContextKey));
+		this.dateTimeList.add(dateTime);
+		this.eventContextKeySet.add(eventContextKey);
+	}
+
+	public void addUserSessionEvent(UserSession userSession) {
+		if (!(CollectionUtils.isEmpty(userSession.getDateTimeList())) && !(CollectionUtils.isEmpty(userSession.getEventContextKeySet()))) {
+			this.dateTimeList.add(userSession.getDateTimeList().get(0));
+			this.eventContextKeySet.add(userSession.getEventContextKeySet().first());
+		}
 	}
 
 	@Override

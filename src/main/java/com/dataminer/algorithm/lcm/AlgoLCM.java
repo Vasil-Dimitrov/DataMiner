@@ -10,40 +10,14 @@ import java.util.List;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemset;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
 
-/* This file is copyright (c) 2012-2014 Alan Souza
- *
- * This file is part of the SPMF DATA MINING SOFTWARE
- * (http://www.philippe-fournier-viger.com/spmf).
- *
- * SPMF is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * SPMF is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with
- * SPMF. If not, see <http://www.gnu.org/licenses/>.
- */
-
 /**
  * This is an implementation of the LCM algorithm for
  * mining frequent closed itemsets from a transaction database.
- * More information on the LCM algorithm can be found in papers by
- * T. Uno, such as: <br/><br/>
- *
- * T. Uno, M. Kiyomi, and H. Arimura. Lcm ver. 2:
- * Efficient mining algorithms for
- * frequent/closed/maximal itemsets. In FIMI, 2004
- *
- * This implementation of LCM was made by Alan Souza and was
- * modified by Philippe Fournier-Viger to add optimizations.. <br/>
  *
  * The implementation is similar to LCM version 2 with some differences.
  * For example, transaction merging is not performed yet and
  * items in transactions are not sorted in descending order of frequency.
  *
- * @author Alan Souza <apsouza@inf.ufrgs.br>
  */
 public class AlgoLCM {
 

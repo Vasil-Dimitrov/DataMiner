@@ -1,20 +1,4 @@
 package com.dataminer.algorithm;
-/* This file is copyright (c) 2008-2013 Philippe Fournier-Viger
- *
- * This file is part of the SPMF DATA MINING SOFTWARE
- * (http://www.philippe-fournier-viger.com/spmf).
- *
- * SPMF is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * SPMF is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with
- * SPMF. If not, see <http://www.gnu.org/licenses/>.
- */
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -34,26 +18,11 @@ import com.dataminer.pattern.itemset_array_integers_with_count.Itemset;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
 
 /**
- * This is an implementation of the AprioriClose (a.k.a Close) algorithm as described by :
- * <br/>
- * <br/>
- *
- * Pasquier, N., Bastide, Y., Taouil, R., Lakhal, L., (1999). Efficient Mining of
- * Association Rules using Closed Itemset Lattices. Information Systems, Elsevier Science,
- * 24(1), pages 25-46 . <br/>
- * <br/>
- *
- * The AprioriClose algorithm is an extension of the Apriori algorithm proposed in: <br/>
- * <br/>
- *
- * Agrawal R, Srikant R. "Fast Algorithms for Mining Association Rules", VLDB. Sep 12-15
- * 1994, Chile, 487-99. <br/>
- * <br/>
+ * This is an implementation of the AprioriClose (a.k.a Close) algorithm.
  *
  * This implementation is an optimized version that saves the result to a file or keep it
  * into memory if no output path is provided by the user to the runAlgorithm() method.
  *
- * @author Philippe Fournier-Viger
  */
 public class AlgoAprioriClose {
 

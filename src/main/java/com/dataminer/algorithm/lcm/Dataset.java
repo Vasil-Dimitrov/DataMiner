@@ -11,36 +11,49 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-/* This file is copyright (c) 2012-2014 Alan Souza
- *
- * This file is part of the SPMF DATA MINING SOFTWARE
- * (http://www.philippe-fournier-viger.com/spmf).
- *
- * SPMF is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * SPMF is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with
- * SPMF. If not, see <http://www.gnu.org/licenses/>.
- */
+
+import com.dataminer.entity.LogFile;
+import com.dataminer.entity.UserSession;
 /**
- * This is the parser class for the dataset.
- * It has actions related to parse a txt based file to a Dataset class.
+ * This is the parser class for the dataset. It has actions related to parse a txt based
+ * file to a Dataset class.
  *
  * @see AlgoLCM
- * @author Alan Souza <apsouza@inf.ufrgs.br>
  */
 public class Dataset {
 
 	private List<Transaction> transactions;
+	// this is basically the uniqueItems element but sorted (for optimization)
 	private Integer[] transactionsItems;
 
 	Set<Integer> uniqueItems = new HashSet<>();
 
 	private int maxItem = 0;
+
+	public Dataset(LogFile logFile) {
+		this.transactions = new ArrayList<>();
+
+		for (UserSession userSession : logFile.getUserSessionList()) {
+			this.transactions.add(createTransactionFromUserSession(userSession));
+		}
+
+		/// sort transactions by increasing last item (optimization)
+		Collections.sort(this.transactions, new Comparator<Transaction>() {
+			@Override
+			public int compare(Transaction arg0, Transaction arg1) {
+				// return arg0.getItems().length - arg1.getItems().length;
+				return arg0.getItems()[arg0.getItems().length - 1] - arg1.getItems()[arg1.getItems().length - 1];
+			}
+		});
+
+		// create the list of items in the database and sort it
+		this.transactionsItems = new Integer[this.uniqueItems.size()];
+		int i = 0;
+		for (Integer item : this.uniqueItems) {
+			this.transactionsItems[i++] = item;
+		}
+		Arrays.sort(this.transactionsItems);
+	}
 
 	public Dataset(String datasetPath) throws IOException {
 
@@ -103,6 +116,24 @@ public class Dataset {
 		if(lastItem > this.maxItem) {
 			this.maxItem = lastItem;
 		}
+		return new Transaction(itemsSorted);
+	}
+
+	/**
+	 * Method for creating a {@link Transaction} out of {@link UserSession}
+	 *
+	 * @param userSession
+	 * @return
+	 */
+	public Transaction createTransactionFromUserSession(UserSession userSession) {
+		Integer[] itemsSorted = userSession.getEventContextKeySet().toArray(new Integer[0]);
+		this.uniqueItems.addAll(userSession.getEventContextKeySet());
+
+		int lastItem = userSession.getEventContextKeySet().last();
+		if (lastItem > this.maxItem) {
+			this.maxItem = lastItem;
+		}
+
 		return new Transaction(itemsSorted);
 	}
 

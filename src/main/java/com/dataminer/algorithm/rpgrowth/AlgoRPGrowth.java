@@ -1,21 +1,5 @@
 package com.dataminer.algorithm.rpgrowth;
 
-/*This file is copyright (c) 2018 Ryan Benton and Blake Johns
- *
- * This file is part of the SPMF DATA MINING SOFTWARE
- * (http://www.philippe-fournier-viger.com/spmf).
- *
- * SPMF is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * SPMF is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with
- * SPMF. If not, see <http://www.gnu.org/licenses/>.
- */
 
 
 import java.io.BufferedReader;
@@ -37,12 +21,6 @@ import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
 
 /**
  * This is an implementation of the Rare Pattern Tree Mining algorithm using the FP-Growth algorithm.
- * More information on rare pattern tree mining can be found in the paper here:
- * "RP-Tree: Rare Pattern Tree Mining",
- * A. Cuzzocrea and U. Dayal (Eds.): Data Warehousing and Knowledge Discovery 2011, LNCS 6862, pp. 277�288, 2011
- *
- * The FP-Growth algorithm was originally created by Philippe Fournier-Viger and modified by
- * Blake Johns and Ryan Benton.
  *
  * This is an optimized version that saves the result to a file
  * or keep it into memory if no output path is provided
@@ -51,7 +29,6 @@ import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
  * @see FPTree
  * @see Itemset
  * @see Itemsets
- * @author Philippe Fournier-Viger, Ryan Benton, Blake Johns
  */
 public class AlgoRPGrowth {
 

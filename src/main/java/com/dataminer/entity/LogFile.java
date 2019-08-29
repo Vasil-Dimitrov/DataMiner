@@ -13,11 +13,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
+//TODO: add logger
 public class LogFile {
 	private List<UserSession> userSessionList = new ArrayList<>();
 	private HashMap<Integer, String> uniqueECMap = new HashMap<>();
 
-	// TODO: This can be optimized by storing the map key value in the nested objects
 	public void addLine(String line) {
 		String elements[] = line.split("\t");
 		if (elements.length != Constant.LOG_FILE_VALID_SIZE) {
@@ -42,24 +42,30 @@ public class LogFile {
 
 		if (this.userSessionList.contains(newUserSession)) {
 			int userSessionIndex = this.userSessionList.indexOf(newUserSession);
-			for (UserEvent event : newUserSession.getUserEventList()) {
-				this.userSessionList.get(userSessionIndex).getUserEventList().add(event);
-			}
+			this.userSessionList.get(userSessionIndex).addUserSessionEvent(newUserSession);
 		} else {
 
 			this.userSessionList.add(newUserSession);
 		}
 	}
 
+	/*
+	 *
+	 * (non-Javadoc) This toString has been implemented with a limiter as the object itself is
+	 * too big
+	 *
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		int limiter = 10;
 		StringBuffer strbf = new StringBuffer();
 		for (UserSession us : this.userSessionList) {
 			strbf.append("Events for user with ip: " + us.getIp() + "\n");
-			for (UserEvent ue : us.getUserEventList()) {
-				strbf.append("\nTime executed: " + ue.getDateTime());
-				strbf.append("\nEvent context: " + this.uniqueECMap.get(ue.getEventContextKey()));
+			int i = 0;
+			for (Integer eventContextKey : us.getEventContextKeySet()) {
+				strbf.append("\nTime executed: " + us.getDateTimeList().get(i++));
+				strbf.append("\nEvent context: " + this.uniqueECMap.get(eventContextKey));
 				strbf.append("\n");
 			}
 
