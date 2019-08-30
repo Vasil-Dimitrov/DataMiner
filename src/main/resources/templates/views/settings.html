@@ -4,19 +4,17 @@
     <th:block th:replace="fragments/header"></th:block>
 </head>
 <body>
-	<th:block th:replace="fragments/navbar"></th:block>
+	<div layout:fragment="content" class="container">
+		<th:block th:replace="fragments/navbar"></th:block>
 
-     <div  layout:fragment="content" class="container mySpace">
-          <div class="jumbotron">
-	          <p>
-	          	Hello, this is the settings page, <br>
-	          	it is still in construction though. <br>
-	          	Please come back later! :)
-	          </p>
-          
-          </div>
-     </div>
-     
-     <th:block th:replace="fragments/footer"></th:block>
+		<div class="jumbotron">
+			<p>
+				Hello, this is the settings page, <br> it is still in construction though. <br> Please come back later! :)
+			</p>
+
+		</div>
+	</div>
+
+	<th:block th:replace="fragments/footer"></th:block>
 </body>
 </html>

@@ -1,15 +1,22 @@
-.bg-navbar {
-    background-color: #0356fc;
+.custom-navbar {
+	background-color: #0356fc;
+	border-radius: 10px;
+	margin-bottom: 20px;
 }
 
-.text-resev {
-    color: #8E0D46;
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	/*background-color: #0356fc;*/
 }
 
-.w-40 {
-    width: 40%;
-}
 
-.hr-2 {
-    height: 2px;
+/* li a:hover:not (.active ) { } */
+
+.active {
+	font-weight: bold;
+	font-size: 17px;
+	/*background-color: #003fbd;*/
 }
