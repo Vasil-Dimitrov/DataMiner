@@ -6,16 +6,11 @@
 <body>
 	<th:block th:replace="fragments/navbar"></th:block>
 
-	<div  layout:fragment="content" class="container mySpace">
+	<div layout:fragment="content" class="container mySpace">
 		<div class="jumbotron">
 			<p>
 				Hello, this is the index page, <br> it is still in construction though. <br> Please come back later! :)
 			</p>
-			
-			
-			<div class="file-upload-wrapper">
-	  			<input type="file" id="input-file-max-fs" class="file-upload" data-max-file-size="2M" />
-			</div>
 
 
 			<!-- File upload -->
@@ -38,9 +33,47 @@
 					</table>
 				</form>
 			</div>
+			
+			<div align="center" th:if="${commonItemSet != null and !commonItemSet.empty}">
+				<h2>Най-често достъпвани евенти</h2>	
+				<table class="table table-striped">
+					<tr>
+						<th>#</th>
+						<th>Евент</th>
+						<th>Достъпваност спрямо потребители</th>
+					</tr>
+					<tr th:each="item, iter : ${commonItemSet}">
+						<td th:text="${iter.index + 1}"></td>
+						<td th:text="${item.eventContext}"></td>
+						<td th:text="${item.percent} + '%'"></td>
+					</tr>
+				</table>
+			</div>
+			
+			<div align="center" th:if="${rareItemSet != null and !rareItemSet.empty}">
+				<h2>Най-рядко достъпвани евенти</h2>	
+				<table class="table table-striped">
+					<tr>
+						<th>#</th>
+						<th>Евент</th>
+						<th>Достъпваност спрямо потребители</th>
+					</tr>
+					<tr th:each="item, iter : ${rareItemSet}">
+						<td th:text="${iter.index + 1}"></td>
+						<td th:text="${item.eventContext}"></td>
+						<td th:text="${item.percent} + '%'"></td>
+					</tr>
+				</table>
+			</div>
+			
+			<th:block th:replace="fragments/barGraph1"></th:block>
+			
 		</div>
-          
-     </div>
+
+
+
+	</div>
+
      
 	<th:block th:replace="fragments/footer"></th:block>
 </body>

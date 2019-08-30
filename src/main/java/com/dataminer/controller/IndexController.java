@@ -6,8 +6,11 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +27,7 @@ import com.dataminer.algorithm.lcm.Dataset;
 import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
 import com.dataminer.entity.LogFile;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
+import com.dataminer.util.MockUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,8 +45,23 @@ public class IndexController extends BaseController {
 
 	@GetMapping({ "/", "/index" })
 	public ModelAndView showIndexPage(ModelAndView modelAndView) {
-		processInputFile();
-		return view("index");
+		// processInputFile();
+		boolean showStats = false;
+
+		if (showStats) {
+			Map<String, Integer> surveyMap = new LinkedHashMap<>();
+			surveyMap.put("Java", 40);
+			surveyMap.put("Dev oops", 115);
+			surveyMap.put("Python", 20);
+			surveyMap.put(".Net", 15);
+
+			modelAndView.addObject("commonItemSet", MockUtil.getMockUserEventList());
+			modelAndView.addObject("rareItemSet", MockUtil.getMockRareUserEventList());
+			modelAndView.addObject("surveyMap", MockUtil.getMockTimeSomething());
+			modelAndView.addObject("surveyMapMaxValue", MockUtil.getMockTimeSomethingMaxValue());
+		}
+
+		return view("index", modelAndView);
 	}
 
 	@PostMapping("/index")
@@ -230,5 +249,32 @@ public class IndexController extends BaseController {
 			e.printStackTrace();
 			return "ako";
 		}
+	}
+
+	/////////////////// UI TESTING
+
+	@GetMapping("/home")
+	public String home(Model model) {
+		model.addAttribute("pass", 50);
+		model.addAttribute("fail", 50);
+		return "views/home";
+	}
+
+	@GetMapping("/displayBarGraph")
+	public String barGraph(Model model) {
+		Map<String, Integer> surveyMap = new LinkedHashMap<>();
+		surveyMap.put("Java", 40);
+		surveyMap.put("Dev oops", 115);
+		surveyMap.put("Python", 20);
+		surveyMap.put(".Net", 15);
+		model.addAttribute("surveyMap", surveyMap);
+		return "views/" + "barGraph";
+	}
+
+	@GetMapping("/displayPieChart")
+	public ModelAndView pieChart(ModelAndView model) {
+		model.addObject("pass", 50);
+		model.addObject("fail", 50);
+		return view("pieChart", model);
 	}
 }
