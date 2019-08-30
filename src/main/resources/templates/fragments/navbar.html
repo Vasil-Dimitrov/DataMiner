@@ -18,13 +18,11 @@
 	            <li class="nav-item" th:classappend="${#httpServletRequest.getRequestURI() == '/help' ? 'active':''}">
 	                <a class="nav-link text-light" href="/help">Помощ</a>
 	            </li>
+	        </ul>
+	        <ul class="navbar-nav ml-auto">
 	            <li class="nav-item" th:classappend="${#httpServletRequest.getRequestURI() == '/about' ? 'active':''}">
 	                <a class="nav-link text-light" href="/about">За проекта</a>
 	            </li>
-	            
-	            
-	            
-			    <li role="separator" ></li>
 	        </ul>
 	    </div>
 	</nav>
