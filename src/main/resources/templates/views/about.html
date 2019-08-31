@@ -1,22 +1,56 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="fragments/header"></th:block>
+	<th:block th:replace="fragments/header"></th:block>
 </head>
 <body>
-     <div  class="container">
-		<th:block th:replace="fragments/navbar"></th:block>
+	<th:block th:replace="fragments/navbar"></th:block>
+	<div class="container">
 
-          <div class="jumbotron">
-	          <p>
-	          	Hello, this is the about page, <br>
-	          	it is still in construction though. <br>
-	          	Please come back later! :)
-	          </p>
-          
-          </div>
-     </div>
-     
-     <th:block th:replace="fragments/footer"></th:block>
+		<div class="jumbotron text-dark">
+			<!-- ROW 1 -->
+			<div class="row">
+				<div class="col">
+					<h5>За проекта</h5>
+					<p>Уеб-базирано приложение за намиране зависимост <br/>
+						на поведение на потребители от лог файл чрез <br />
+						реализирането на 3 различни алгоритми за <br/>
+						извличане на данни.</p>
+				</div>
+				<div class="col">
+					<h5>Технологии</h5>
+					<ul>
+						<li>Java</li>
+						<li>Thymeleaf, Html, Js, Css</li>
+						<li>Spring Boot, Lombok, Gradle, Bootstrap</li>
+					</ul>
+				</div>
+			</div>
+			<!--  ROW 2 -->
+			<div class="row">
+				<div class="col">
+					<h5>Студент</h5>
+					<ul>
+						<li class="list-unstyled">Име: Васил Димитров Димитров</li>
+						<li class="list-unstyled">Унивеситет: ТУ-СОФИЯ</li>
+						<li class="list-unstyled">Специалност: ИТИ</li>
+						<li class="list-unstyled">Фак. №: 501214037</li>
+					</ul>
+				</div>
+				<div class="col">
+					<h5>Контакти</h5>
+					<ul>
+						<li><a target="_blank" href="https://github.com/Vasil-Dimitrov">GitHub: Vasil-Dimitrov</a></li>
+						<li><a href="mailto: vasil.dimitrov@gmail.com">vasil.dimitrov@gmail.com</a></li>
+						<li>+359 878 112 345</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
+	<th:block th:replace="fragments/footer"></th:block>
+
 </body>
 </html>
