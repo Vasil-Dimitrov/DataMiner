@@ -1,7 +1,7 @@
  
 <th:block th:fragment="navbar">
 	
-	<nav class="navbar navbar-expand-md navbar-dark bg-primary-2 custom-navbar {  ">
+	<nav class="navbar navbar-expand-md navbar-dark bg-primary-2 custom-navbar" id="navbar">
 		<div  class="container">
 			<a class="navbar-brand font-weight-bold" href="#">
 				<img th:src="@{/images/tu-white.png}" src="../images/tu-white.png" width="30" height="30" class="d-inline-block align-top" alt="">
@@ -32,6 +32,20 @@
 	    </div>
 	</nav>
 
+<script>
+window.onscroll = function() {myFunction()};
+
+var navbar = document.getElementById("navbar");
+var sticky = navbar.offsetTop;
+
+function myFunction() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
+  }
+}
+</script>
 </th:block>
 
 

@@ -4,76 +4,48 @@
     <th:block th:replace="fragments/header"></th:block>
 </head>
 <body>
+	<div class="custom-shadows" th:include="fragments/navbar"></div>
 	<div class="container">
-		<th:block th:replace="fragments/navbar"></th:block>
 
 		<div class="jumbotron">
-			<p>
-				Hello, this is the index page, <br> it is still in construction though. <br> Please come back later! :)
-			</p>
 
-
-			<!-- File upload -->
-			<div th:if="${upload_message}">
-				<h2 th:text="${upload_message}" />
-			</div>
-
-
-			<div>
-				<form method="POST" enctype="multipart/form-data" action="/index">
-					<table>
-						<tr>
-							<td>File to upload:</td>
-							<td><input type="file" name="file" /></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td><input type="submit" value="Upload" /></td>
-						</tr>
-					</table>
+			<!-- File upload msg -->
+			<h2 th:text="${upload_message}"></h2>
+			
+			<!-- Custom upload file -->
+			<div class="container mb-5" th:if="${showStats}">
+				<form method="POST" action="/index" enctype="multipart/form-data">
+					<p>Качете избраният от вас .csv лог файл тук:</p>
+					<div class="custom-file mb-3">
+						<input type="file" class="custom-file-input" id="customFile" name="filename">
+						<label class="custom-file-label" for="customFile">Избери лог файл</label>
+ 					</div>
+				    
+					<div class="mt-3">
+						<button type="submit" class="btn btn-primary">Качи</button>
+					</div>
 				</form>
 			</div>
+
+			<!-- Common Item Set List -->
+			<th:block th:replace="fragments/itemsetList(itemset=${commonItemSet}, titleText=${commonItemSetTitle})"></th:block>
 			
-			<div align="center" th:if="${commonItemSet != null and !commonItemSet.empty}">
-				<h2>Най-често достъпвани евенти</h2>	
-				<table class="table table-striped">
-					<tr>
-						<th>#</th>
-						<th>Евент</th>
-						<th>Достъпваност спрямо потребители</th>
-					</tr>
-					<tr th:each="item, iter : ${commonItemSet}">
-						<td th:text="${iter.index + 1}"></td>
-						<td th:text="${item.eventContext}"></td>
-						<td th:text="${item.percent} + '%'"></td>
-					</tr>
-				</table>
-			</div>
+			<!-- Rare Item Set List -->
+			<div class="mt-5" th:include="fragments/itemsetList(itemset=${rareItemSet}, titleText=${rareItemSetTitle})"></div>
 			
-			<div align="center" th:if="${rareItemSet != null and !rareItemSet.empty}">
-				<h2>Най-рядко достъпвани евенти</h2>	
-				<table class="table table-striped">
-					<tr>
-						<th>#</th>
-						<th>Евент</th>
-						<th>Достъпваност спрямо потребители</th>
-					</tr>
-					<tr th:each="item, iter : ${rareItemSet}">
-						<td th:text="${iter.index + 1}"></td>
-						<td th:text="${item.eventContext}"></td>
-						<td th:text="${item.percent} + '%'"></td>
-					</tr>
-				</table>
-			</div>
-			
+			<!-- Rare Item Set List -->
 			<th:block th:replace="fragments/barGraph1"></th:block>
-			
 		</div>
-
-
 
 	</div>
 
+	<script>
+		// the selected file's name to appear in the selection box
+		$(".custom-file-input").on("change", function() {
+		  var fileName = $(this).val().split("\\").pop();
+		  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+		});
+	</script>
      
 	<th:block th:replace="fragments/footer"></th:block>
 </body>

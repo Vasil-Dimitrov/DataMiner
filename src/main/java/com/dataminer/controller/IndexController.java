@@ -25,6 +25,7 @@ import com.dataminer.algorithm.AlgoAprioriClose;
 import com.dataminer.algorithm.lcm.AlgoLCM;
 import com.dataminer.algorithm.lcm.Dataset;
 import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
+import com.dataminer.constant.Constant;
 import com.dataminer.entity.LogFile;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
 import com.dataminer.util.MockUtil;
@@ -46,26 +47,24 @@ public class IndexController extends BaseController {
 	@GetMapping({ "/", "/index" })
 	public ModelAndView showIndexPage(ModelAndView modelAndView) {
 		// processInputFile();
-		boolean showStats = false;
+		boolean showStats = true;
 
 		if (showStats) {
-			Map<String, Integer> surveyMap = new LinkedHashMap<>();
-			surveyMap.put("Java", 40);
-			surveyMap.put("Dev oops", 115);
-			surveyMap.put("Python", 20);
-			surveyMap.put(".Net", 15);
-
 			modelAndView.addObject("commonItemSet", MockUtil.getMockUserEventList());
+			modelAndView.addObject("commonItemSetTitle", Constant.commonItemSetTitle);
+
 			modelAndView.addObject("rareItemSet", MockUtil.getMockRareUserEventList());
+			modelAndView.addObject("rareItemSetTitle", Constant.rareItemSetTitle);
+
 			modelAndView.addObject("surveyMap", MockUtil.getMockTimeSomething());
 			modelAndView.addObject("surveyMapMaxValue", MockUtil.getMockTimeSomethingMaxValue());
 		}
-
+		modelAndView.addObject("showStats", showStats);
 		return view("index", modelAndView);
 	}
 
 	@PostMapping("/index")
-	public ModelAndView uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, ModelAndView mav) {
+	public ModelAndView uploadFile(@RequestParam("filename") MultipartFile file, RedirectAttributes redirectAttributes, ModelAndView mav) {
 		// redirectAttributes.addFlashAttribute("upload_message", "You successfully uploaded " +
 		// file.getOriginalFilename() + "!");
 		// return redirect("index");

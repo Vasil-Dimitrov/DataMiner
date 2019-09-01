@@ -1,5 +1,6 @@
 .custom-navbar {
-	margin-bottom: 20px;
+	margin-bottom: 30px;
+	box-shadow:0 .125rem .25rem rgba(0,0,0,.45)!important
 }
 
 ul {
@@ -23,8 +24,4 @@ ul {
 .bg-primary-2 {
 	background-color:#42a5f5
 }
-
-
-
-
 

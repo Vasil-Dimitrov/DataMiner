@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/header"></th:block>
+</head>
+<body>
+	<th:block th:replace="fragments/navbar"></th:block>
+	<div class="container">
+
+		<div class="jumbotron text-dark">
+
+			<div align="center" th:if="${resourcesUsed != null and !resourcesUsed.empty}">
+				<h2>Използвани ресурси</h2>	
+				<table class="table table-striped">
+					<tr>
+						<th>#</th>
+						<th>Линк</th>
+					</tr>
+					<tr th:each="resource, iter : ${resourcesUsed}">
+						<td th:text="${iter.index + 1}"></td>
+						<td>
+						<a th:href="${resource}" th:text="${resource}"></a>
+						</td>
+					</tr>
+				</table>
+			</div>			
+
+		</div>
+		
+	</div>
+	
+	<th:block th:replace="fragments/footer"></th:block>
+
+</body>
+</html>
