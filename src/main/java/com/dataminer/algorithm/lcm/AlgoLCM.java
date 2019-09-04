@@ -1,7 +1,5 @@
 package com.dataminer.algorithm.lcm;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,77 +9,44 @@ import com.dataminer.pattern.itemset_array_integers_with_count.Itemset;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
 
 /**
- * This is an implementation of the LCM algorithm for
- * mining frequent closed itemsets from a transaction database.
+ * This is an implementation of the LCM algorithm for mining frequent closed itemsets from
+ * a transaction database.
  *
- * The implementation is similar to LCM version 2 with some differences.
- * For example, transaction merging is not performed yet and
- * items in transactions are not sorted in descending order of frequency.
+ * The implementation is similar to LCM version 2 with some differences. For example,
+ * transaction merging is not performed yet and items in transactions are not sorted in
+ * descending order of frequency.
  *
+ * @author Vasil.Dimitrov^2
  */
 public class AlgoLCM {
 
 	private Itemsets closedFrequentItemsets;
 
-	// object to write the output file
-	BufferedWriter writer = null;
-
-	// the number of frequent itemsets found (for
-	// statistics)
-	private int frequentCount;
-
-	// the start time and end time of the last algorithm execution
 	long startTimestamp;
 	long endTimestamp;
 	int minsupRelative;
 
-	// Buckets for occurence delivery
+	// Buckets for occurrence delivery
 	// Recall that each bucket correspond to an item
 	// and contains the transactions where the items appears.
 	private List<Transaction>[] buckets;
 
-	public AlgoLCM() {
-
-	}
 
 	/**
 	 * Run the algorithm
-	 * @param minimumSupport  the minimum support threshold as percentage value between 0 and 1
-	 * @param dataset  the dataset
-	 * @param outputPath  the output file path to save the result or null if to be kept in memory
-	 * @param mineAllFrequentItemsets mine all frequent itemsets
-	 * @param mineAllMaximalItemsets mine only maximal itemsets
-	 * @return the itemsets or null if the user choose to save to file
-	 * @throws IOException if exception while reading/writing to file
+	 *
+	 * @param minimumSupport
+	 * @param dataset
+	 * @return
 	 */
-	public Itemsets runAlgorithm(double minimumSupport, Dataset dataset, String outputPath) throws IOException {
-		// record the start time
+	public Itemsets runAlgorithm(double minimumSupport, Dataset dataset) {
 		this.startTimestamp = System.currentTimeMillis();
-
-		// if the user choose to save to file
-		// create object for writing the output file
-		if(outputPath != null) {
-			this.writer = new BufferedWriter(new FileWriter(outputPath));
-		}else {
-			// if the user choose to save to memory
-			this.writer = null;
-			this.closedFrequentItemsets = new Itemsets("Itemsets");
-		}
-
-		// reset the number of itemset found
-		this.frequentCount = 0;
-
-		// reset the memory usage checking utility
-		// VAS:commented_out MemoryLogger.getInstance().reset();
-
-		// convert from an absolute minsup to a relative minsup by multiplying
-		// by the database size
+		this.closedFrequentItemsets = new Itemsets("Itemsets");
 		this.minsupRelative = (int) Math.ceil(minimumSupport * dataset.getTransactions().size());
 
 		// Create the initial occurrence array for the dataset
 		performFirstOccurenceDelivery(dataset);
 
-		//======
 		// Remove infrequent items from transactions by using support calculated using
 		// the buckets. Recall that each bucket correspond to an item
 		// and contains the transactions where the items appears.
@@ -89,7 +54,6 @@ public class AlgoLCM {
 			transaction.removeInfrequentItems(this.buckets, this.minsupRelative);
 		}
 
-		//======
 		// Create the array of all frequent items.
 		List<Integer> allItems = new ArrayList<>();
 		for(Integer item : dataset.getUniqueItems()) {
@@ -100,20 +64,11 @@ public class AlgoLCM {
 		// Sort all items
 		Collections.sort(allItems);
 
-		//======
-		// Call the recursive method witht the empty set as prefix.
+		// Call the recursive method with the empty set as prefix.
 		// Since it is the empty set, we will have all transactions and no frequency count
 		backtrackingLCM(null, dataset.getTransactions(), allItems, -1);
 
-		// record the end time
 		this.endTimestamp = System.currentTimeMillis();
-		//close the output file
-		if(this.writer != null) {
-			this.writer.close();
-		}
-
-		// VAS:commented_out MemoryLogger.getInstance().checkMemory();
-
 		return this.closedFrequentItemsets;
 	}
 
@@ -125,11 +80,9 @@ public class AlgoLCM {
 	 * @param tailPosInP the tail item position in itemset P
 	 * @throws IOException if error writing to output file
 	 */
-	private void backtrackingLCM(List<Integer> p,
-			List<Transaction> transactionsOfP, List<Integer> frequentItems,
-			int tailPosInP) throws IOException {
+	private void backtrackingLCM(List<Integer> p, List<Transaction> transactionsOfP, List<Integer> frequentItems, int tailPosInP) {
 
-		// ========  for each frequent item  e  =============
+		// ======== for each frequent item e =============
 		for (int j = 0; j < frequentItems.size(); j++) {
 			Integer e = frequentItems.get(j);
 			//   if the item is not already in p  before the current tail position
@@ -164,12 +117,13 @@ public class AlgoLCM {
 					}
 				}
 
-				// ===== save the frequent closed itemset
-				int supportPe = transactionsPe.size();
-				output(itemset, supportPe);
+				// ===== save the frequent closed itemset to mem
+				if (!itemset.isEmpty()) {
+					this.closedFrequentItemsets.addItemset(new Itemset(itemset, transactionsPe.size()), itemset.size());
+				}
 
 				//==== perform database reduction ====
-				anyTimeDatabaseReductionClosed(transactionsPe, j, frequentItems, p, e);
+				anyTimeDatabaseReductionClosed(transactionsPe, j, frequentItems, e);
 
 				// ================ Find frequent items in transactions containing P ============
 				// Get all frequent items e such that e > tailOfP
@@ -188,7 +142,6 @@ public class AlgoLCM {
 			}
 		}
 
-		// VAS:commented_out MemoryLogger.getInstance().checkMemory();
 	}
 
 
@@ -224,7 +177,7 @@ public class AlgoLCM {
 	 * @param itemset
 	 * @param e
 	 */
-	private void anyTimeDatabaseReductionClosed(List<Transaction> transactionsPe, int j, List<Integer> frequentItems, List<Integer> itemset, Integer e) {
+	private void anyTimeDatabaseReductionClosed(List<Transaction> transactionsPe, int j, List<Integer> frequentItems, Integer e) {
 
 		// We just reset the buckets for item  > e
 		// instead of all buckets
@@ -363,12 +316,12 @@ public class AlgoLCM {
 
 	/**
 	 * Check if an item appears in all transactions of a list of transactions
-	 * @param transactions a list of transactions
-	 * @param item an item
+	 *
+	 * @param transactions
+	 * @param item
 	 * @return true if the item appears in all transactions
 	 */
 	private boolean isItemInAllTransactions(List<Transaction> transactions, Integer item) {
-
 		for(Transaction transaction : transactions) {
 			if(transaction.containsByBinarySearch(item) == -1) {
 				return false;
@@ -377,57 +330,15 @@ public class AlgoLCM {
 		return true;
 	}
 
-	/**
-	 * Save a frequent closed itemset to file or memory depending on what the user chose.
-	 * @param itemset the itemset
-	 * @throws IOException if error while writting to output file
-	 */
-	private void output(List<Integer> itemset, int support) throws IOException {
-		// if not the empty set
-		if(!itemset.isEmpty()) {
-			this.frequentCount++;
-
-			// if save to memory
-			if(this.writer == null) {
-				// The following line is not too optimized since
-				// we convert an itemset as List<Integer> to int[]
-				// but this cost is still quite small, so we leave it like
-				this.closedFrequentItemsets.addItemset(new Itemset(itemset, support), itemset.size());
-			}else {
-				// if save to file
-				// create a stringuffer
-				StringBuilder buffer = new StringBuilder();
-				// append items from the itemset to the StringBuilder
-				for (int i = 0; i < itemset.size(); i++) {
-					buffer.append(itemset.get(i));
-					if (i != (itemset.size() - 1)) {
-						buffer.append(' ');
-					}
-				}
-				// append the support of the itemset
-				buffer.append(" #SUP: ");
-				buffer.append(support);
-				// write the strinbuffer to file and create a new line
-				// so that we are ready for writing the next itemset.
-				this.writer.write(buffer.toString());
-				this.writer.newLine();
-			}
-		}
-	}
-
-
-
 
 	/**
 	 * Print statistics about the latest execution of the algorithm.
 	 */
 	public void printStats() {
 		System.out.println("========== LCM - STATS ============");
-		System.out.println(" Freq. closed itemsets count: " + this.frequentCount);
+		System.out.println(" Freq. closed itemsets count: " + this.closedFrequentItemsets.getItemsetsCount());
 		System.out.println(" Total time ~: " + (this.endTimestamp - this.startTimestamp)
 				+ " ms");
-		// VAS:commented_out System.out.println(" Max memory:" +
-		// MemoryLogger.getInstance().getMaxMemory());
 		System.out.println("=====================================");
 	}
 }

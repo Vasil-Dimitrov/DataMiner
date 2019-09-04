@@ -3,10 +3,11 @@ package com.dataminer.entity;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.dataminer.constant.Constant;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,25 +17,28 @@ import lombok.Setter;
 //TODO: add logger
 public class LogFile {
 	private List<UserSession> userSessionList = new ArrayList<>();
-	private HashMap<Integer, String> uniqueECMap = new HashMap<>();
+	private BiMap<Integer, String> uniqueECMap = HashBiMap.create();
 
 	public void addLine(String line) {
 		String elements[] = line.split("\t");
+		Integer lastKey = null;
 		if (elements.length != Constant.LOG_FILE_VALID_SIZE) {
 			return;
 		}
+
 		RawLineElements rawLine = new RawLineElements(elements);
 
 		// adding to the uniqueEventContextMap
 		if (!this.uniqueECMap.containsValue(rawLine.getEventContext())) {
-			this.uniqueECMap.put((this.uniqueECMap.size() + 1), rawLine.getEventContext());
+			lastKey = this.uniqueECMap.size() + 1;
+			this.uniqueECMap.put((lastKey), rawLine.getEventContext());
 		}
 
 		UserSession newUserSession;
 		try {
 			newUserSession = new UserSession(rawLine.getIp(),
 					LocalDateTime.parse(rawLine.getDateTime(), Constant.LOG_FILE_DATE_TIME_FORMAT),
-					Integer.valueOf(this.uniqueECMap.size()));
+					lastKey != null ? lastKey : this.uniqueECMap.inverse().get(rawLine.getEventContext()));
 		} catch (DateTimeParseException e) {
 			e.printStackTrace();
 			return;
@@ -58,7 +62,7 @@ public class LogFile {
 	 */
 	@Override
 	public String toString() {
-		int limiter = 10;
+		int limiter = 1;
 		StringBuffer strbf = new StringBuffer();
 		for (UserSession us : this.userSessionList) {
 			strbf.append("Events for user with ip: " + us.getIp() + "\n");

@@ -286,7 +286,7 @@ public class AlgoRPGrowth {
 
 				//If not the root OR support < minimum relative support; save item set
 				if ((prefixLength > 0) || (support < this.minSupportRelative)) {
-					saveItemset(prefix, prefixLength+1, betaSupport);
+					setSupport(prefix, prefixLength+1, betaSupport);
 				}
 
 
@@ -390,7 +390,7 @@ public class AlgoRPGrowth {
 				}
 			}
 			// save the item set
-			saveItemset(prefix, newPrefixLength, support);
+			setSupport(prefix, newPrefixLength, support);
 		}
 	}
 
@@ -444,7 +444,7 @@ public class AlgoRPGrowth {
 	 * Write a frequent item set that is found to the output file or
 	 * keep into memory if the user prefer that the result be saved into memory.
 	 */
-	private void saveItemset(int [] itemset, int itemsetLength, int support) throws IOException {
+	private void setSupport(int [] itemset, int itemsetLength, int support) throws IOException {
 
 		// increase the number of item sets found for statistics purpose
 		this.itemsetCount++;
@@ -482,7 +482,7 @@ public class AlgoRPGrowth {
 			Arrays.sort(itemsetArray);
 
 			Itemset itemsetObj = new Itemset(itemsetArray);
-			itemsetObj.setAbsoluteSupport(support);
+			itemsetObj.setSupport(support);
 			this.patterns.addItemset(itemsetObj, itemsetLength);
 		}
 	}

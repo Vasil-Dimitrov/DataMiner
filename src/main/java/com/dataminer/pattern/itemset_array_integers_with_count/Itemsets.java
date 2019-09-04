@@ -1,69 +1,31 @@
 package com.dataminer.pattern.itemset_array_integers_with_count;
 
-/* This file is copyright (c) 2008-2012 Philippe Fournier-Viger
- *
- * This file is part of the SPMF DATA MINING SOFTWARE
- * (http://www.philippe-fournier-viger.com/spmf).
- *
- * SPMF is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * SPMF is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with
- * SPMF. If not, see <http://www.gnu.org/licenses/>.
- */
-
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
- * This class represents a set of itemsets, where an itemset is an array of integers
- * with an associated support count. Itemsets are ordered by size. For
- * example, level 1 means itemsets of size 1 (that contains 1 item).
- *
- * @author Philippe Fournier-Viger
- */
-/**
+ * This class hold a list of a list of itemsets. Where the first level of the list
+ * corresponds to the size of the itemsets contained inside it.
  *
  * @author Vasil.Dimitrov^2
  *
  */
 public class Itemsets{
-	/** We store the itemsets in a list named "levels".
-	 Position i in "levels" contains the list of itemsets of size i */
 	private final List<List<Itemset>> levels = new ArrayList<>();
-	/** the total number of itemsets **/
+	@Getter
 	private int itemsetsCount = 0;
-	/** a name that we give to these itemsets (e.g. "frequent itemsets") */
 	private String name;
 
-	/**
-	 * Constructor
-	 * @param name the name of these itemsets
-	 */
 	public Itemsets(String name) {
 		this.name = name;
-		this.levels.add(new ArrayList<Itemset>()); // We create an empty level 0 by
-		// default.
+		// adding empty level 0 by default
+		this.levels.add(new ArrayList<Itemset>());
 	}
 
-	/**
-	 * This method is deprecated. Call the method directly, without passing an argument
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public void printItemsets(int value) {
-		this.printItemsets();
-	}
-
-	/* (non-Javadoc)
-	 * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#printItemsets(int)
-	 */
 	public void printItemsets() {
 		System.out.println(" ------- " + this.name + " -------");
 		int patternCount = 0;
@@ -88,9 +50,15 @@ public class Itemsets{
 		System.out.println(" --------------------------------");
 	}
 
-	/* (non-Javadoc)
-	 * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#addItemset(ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemset, int)
+	/**
+	 * Sort the itemsets on the second level based on their support in descending order
 	 */
+	public void sortItemsets() {
+		for (List<Itemset> level : this.levels) {
+			Collections.sort(level, Collections.reverseOrder());
+		}
+	}
+
 	public void addItemset(Itemset itemset, int k) {
 		while (this.levels.size() <= k) {
 			this.levels.add(new ArrayList<Itemset>());
@@ -99,30 +67,6 @@ public class Itemsets{
 		this.itemsetsCount++;
 	}
 
-	/* (non-Javadoc)
-	 * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#getLevels()
-	 */
-	public List<List<Itemset>> getLevels() {
-		return this.levels;
-	}
-
-	/* (non-Javadoc)
-	 * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#getItemsetsCount()
-	 */
-	public int getItemsetsCount() {
-		return this.itemsetsCount;
-	}
-
-	/* (non-Javadoc)
-	 * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#setName(java.lang.String)
-	 */
-	public void setName(String newName) {
-		this.name = newName;
-	}
-
-	/* (non-Javadoc)
-	 * @see ca.pfv.spmf.patterns.itemset_array_integers_with_count.AbstractItemsets#decreaseItemsetCount()
-	 */
 	public void decreaseItemsetCount() {
 		this.itemsetsCount--;
 	}
