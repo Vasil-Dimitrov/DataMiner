@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dataminer.algorithm.lcm.AlgoLCM;
 import com.dataminer.algorithm.lcm.Dataset;
+import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
 import com.dataminer.constant.Constant;
 import com.dataminer.entity.LogFile;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
@@ -101,9 +102,10 @@ public class IndexController extends BaseController {
 				logFile.addLine(tempText);
 			}
 		} catch (IOException e) {
-			log.debug(e.getMessage());
+			log.error(e.toString());
 		}
 		runLCMFromLog(logFile);
+		runRPGGrowthFromLog(logFile);
 
 		// System.out.println(logFile.toString());
 		System.out.println("Successfully created " + logFile.getUserSessionList().size() + " user session!");
@@ -114,8 +116,8 @@ public class IndexController extends BaseController {
 
 	public String runLCMFromLog(LogFile logFile) {
 		int status = 0;
+		double minsup = 0.2;
 		Dataset dataset = new Dataset(logFile);
-		double minsup = 0.2; // means a minsup of 2 transaction (we used a relative support)
 
 		// Applying the algorithm
 		AlgoLCM algo = new AlgoLCM();
@@ -129,6 +131,29 @@ public class IndexController extends BaseController {
 		status = 1;
 
 		return "LCM run completed with status " + status;
+	}
+
+	public String runRPGGrowthFromLog(LogFile logFile) {
+		int status = 0;
+		double minsup = 0.32;
+		double minraresup = 0.15;
+
+		AlgoRPGrowth algo = new AlgoRPGrowth();
+
+		Itemsets patterns = null;
+
+		try {
+			patterns = algo.runAlgorithm(logFile, minsup, minraresup);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		algo.printStats();
+
+		patterns.printItemsets();
+		status = 1;
+		return "RPGrowth run completed with status " + status;
 	}
 
 

@@ -5,8 +5,6 @@ import java.io.UnsupportedEncodingException;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -63,31 +61,25 @@ public class RunAlgorithmsDebug {
 	public String runRPGrowth(ModelAndView modelAndView) {
 		int status = 0;
 		String input;
-		try {
-			input = HelperUtil.fileToPath(Constant.debugFile);
+		input = HelperUtil.fileToPath(Constant.debugFile);
 
-			double minsup = 0.6; // means a minsup of 2 transaction (we used a relative support)
-			double minraresup = 0.1;
+		double minsup = 0.6; // means a minsup of 2 transaction (we used a relative support)
+		double minraresup = 0.1;
 
-			// Applying the algorithm
-			AlgoRPGrowth algo = new AlgoRPGrowth();
+		// Applying the algorithm
+		AlgoRPGrowth algo = new AlgoRPGrowth();
 
-			// Uncomment the following line to set the maximum pattern length (number of items per
-			// itemset, e.g. 3 )
-			// algo.setMaximumPatternLength(3);
+		// Uncomment the following line to set the maximum pattern length (number of items per
+		// itemset, e.g. 3 )
+		// algo.setMaximumPatternLength(3);
 
-			// Run the algo
-			// NOTE that here we use "null" as the output file path because we are saving to memory
-			Itemsets patterns = algo.runAlgorithm(input, null, minsup, minraresup);
-			algo.printStats();
-
-			patterns.printItemsets();
-			status = 1;
-		} catch (UnsupportedEncodingException e1) {
-			log.debug(e1.getMessage());
-		} catch (IOException e) {
-			log.debug(e.getMessage());
-		}
+		// Run the algo
+		// // NOTE that here we use "null" as the output file path because we are saving to memory
+		// Itemsets patterns = algo.runAlgorithm(input, null, minsup, minraresup);
+		// algo.printStats();
+		//
+		// patterns.printItemsets();
+		status = 1;
 
 		return "RPGrowth run completed with status " + status;
 	}

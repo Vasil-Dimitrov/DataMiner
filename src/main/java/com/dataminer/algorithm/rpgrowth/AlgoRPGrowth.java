@@ -2,11 +2,7 @@ package com.dataminer.algorithm.rpgrowth;
 
 
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,19 +12,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.util.CollectionUtils;
+
+import com.dataminer.entity.LogFile;
+import com.dataminer.entity.UserSession;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemset;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
 
 /**
- * This is an implementation of the Rare Pattern Tree Mining algorithm using the FP-Growth algorithm.
+ * This is an optimized implementation of the Rare Pattern Tree Mining algorithm using the
+ * FP-Growth algorithm.
  *
- * This is an optimized version that saves the result to a file
- * or keep it into memory if no output path is provided
- * by the user to the runAlgorithm method().
+ * @author Vasil.Dimitrov^2
  *
- * @see FPTree
- * @see Itemset
- * @see Itemsets
  */
 public class AlgoRPGrowth {
 
@@ -41,8 +37,6 @@ public class AlgoRPGrowth {
 	// parameter
 	public int minRareSupportRelative;//the relative minimum rare support
 	public int minSupportRelative; // the relative minimum support
-
-	BufferedWriter writer = null; // object to write the output file
 
 	// The  patterns that are found
 	// (if the user want to keep them into memory)
@@ -58,120 +52,92 @@ public class AlgoRPGrowth {
 	// another buffer for storing rpnodes in a single path of the tree
 	private RPNode[] rpNodeTempBuffer = null;
 
-	// This buffer is used to store an itemset that will be written to file
-	// so that the algorithm can sort the itemset before it is output to file
-	// (when the user choose to output result to file).
-	private int[] itemsetOutputBuffer = null;
 
 	/** maximum pattern length */
 	private int maxPatternLength = 1000;
 
 	/**
-	 * Constructor
+	 * Run the algorithm
+	 *
+	 * @param logFile
+	 * @param minsupp
+	 * @param minraresupp
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
 	 */
-	public AlgoRPGrowth() {
-
-	}
-
-	/**
-	 * Method to run the RPGRowth algorithm.
-	 * @param input the path to an input file containing a transaction database.
-	 * @param output the output file path for saving the result (if null, the result
-	 *        will be returned by the method instead of being saved).
-	 * @param minsupp the minimum support threshold.
-	 * @PARAM misraresupp the minimum support threshold.
-	 * @return the result if no output file path is provided.
-	 * @throws IOException exception if error reading or writing files
-	 */
-	public Itemsets runAlgorithm(String input, String output, double minsupp, double minraresupp) throws FileNotFoundException, IOException {
-		// record start time
+	public Itemsets runAlgorithm(LogFile logFile, double minsupp, double minraresupp)
+			throws FileNotFoundException, IOException {
 		this.startTimestamp = System.currentTimeMillis();
-		// number of itemsets found
 		this.itemsetCount = 0;
 
-		//initialize tool to record memory usage
-		// VAS:commented_out MemoryLogger.getInstance().reset();
-		// VAS:commented_out MemoryLogger.getInstance().checkMemory();
-
 		// if the user want to keep the result into memory
-		if(output == null){
-			this.writer = null;
-			this.patterns =  new Itemsets("RARE ITEMSETS");
-		}else{ // if the user want to save the result to a file
-			this.patterns = null;
-			this.writer = new BufferedWriter(new FileWriter(output));
-			this.itemsetOutputBuffer = new int[this.BUFFERS_SIZE];
-		}
+		this.patterns = new Itemsets("RARE ITEMSETS");
 
-		// (1) PREPROCESSING: Initial database scan to determine the frequency of each item
+		// (1) PREPROCESSING: frequency of each item
 		// The frequency is stored in a map:
-		//    key: item   value: support
-		final Map<Integer, Integer> mapSupport = scanDatabaseToDetermineFrequencyOfSingleItems(input);
+		// final Map<Integer, Integer> mapSupport =
+		// scanDatabaseToDetermineFrequencyOfSingleItems(input);
 
 		// convert the minimum support as percentage to a relative minimum support
 		// convert the minimum rare support as percentage to a minimum rare support
+		this.transactionCount = logFile.getUserSessionList().size();
 		this.minRareSupportRelative = (int) Math.ceil(minraresupp * this.transactionCount);
 		this.minSupportRelative = (int) Math.ceil(minsupp * this.transactionCount);
 
 		// (2) Scan the database again to build the initial RP-Tree
 		// Before inserting a transaction in the RPTree, we sort the items
-		// by descending order of support.  We ignore items that
+		// by descending order of support. We ignore items that
 		// have over the minimum support.
 		RPTree tree = new RPTree();
 
-		// read the file
-		BufferedReader reader = new BufferedReader(new FileReader(input));
-		String line;
-		// for each line (transaction) until the end of the file
-		while( ((line = reader.readLine())!= null)){
-			// if the line is  a comment, is  empty or is a
-			// kind of metadata
-			if ((line.isEmpty() == true) ||	(line.charAt(0) == '#') || (line.charAt(0) == '%')
-					|| (line.charAt(0) == '@')) {
+		for (UserSession userSession : logFile.getUserSessionList()) {
+			List<Integer> transaction = new ArrayList<>();
+
+			for (Integer contextKey : userSession.getEventContextKeySet()) {
+				// only add items that have less than or equal to the minimum support
+				// and more than or equal to the minimum rare support
+				if (logFile.getKeyCount().get(contextKey) >= this.minRareSupportRelative) {
+					// so the items being added are >= minRareSupportRelative
+					transaction.add(contextKey);
+				}
+			}
+
+			if (CollectionUtils.isEmpty(transaction)) {
 				continue;
 			}
 
-			String[] lineSplited = line.split(" ");
-			List<Integer> transaction = new ArrayList<>();
-
-			// for each item in the transaction
-			for(String itemString : lineSplited){
-				Integer item = Integer.parseInt(itemString);
-				// only add items that have less than or equal to the minimum support
-				// and more than or equal to the minimum rare support
-				if(mapSupport.get(item) >= this.minRareSupportRelative){
-					//so the items being added are >= minRareSupportRelative
-					transaction.add(item);}
-			}
-
 			// sort item in the transaction by descending order of support
-			Collections.sort(transaction, new Comparator<Integer>(){
+			Collections.sort(transaction, new Comparator<Integer>() {
 				@Override
-				public int compare(Integer item1, Integer item2){
+				public int compare(Integer item1, Integer item2) {
 					// compare the frequency
-					int compare = mapSupport.get(item2) - mapSupport.get(item1);
+					int compare = logFile.getKeyCount().get(item2) - logFile.getKeyCount().get(item1);
 					// if the same frequency, we check the lexical ordering!
-					if(compare == 0){
-						return (item1 - item2);}
+					if (compare == 0) {
+						return (item1 - item2);
+					}
 					// otherwise, just use the frequency
-					return compare;}
+					return compare;
+				}
 			});
-			//Add the sorted items to the RP tree
-			//If (last item in sorted transaction is < minRelSup, we accept the transaction)
-			//get the last item in transaction; because the last item in the transaction is the smallest count size
-			int myCheck = transaction.get(transaction.size() - 1);
-			//take item and get its count
-			int count = mapSupport.get(myCheck);
-			//if the last item is below minSupportRelative then it is Rare by our definition, so it is of interest and added to the tree
-			if(count < this.minSupportRelative) {
+
+			// Add the sorted items to the RP tree
+			// If (last item in sorted transaction is < minRelSup, we accept the transaction)
+			// get the last item in transaction; because the last item in the transaction is the
+			// smallest count size
+			int biggestTransactionKey = transaction.get(transaction.size() - 1);
+			// take item and get its count
+			int count = logFile.getKeyCount().get(biggestTransactionKey);
+			// if the last item is below minSupportRelative then it is Rare by our definition, so it
+			// is of interest and added to the tree
+			if (count < this.minSupportRelative) {
 				tree.addTransaction(transaction);
 			}
 		}
-		// close the input file
-		reader.close();
 
 		// We create the header table for the tree using the calculated support of single items
-		tree.createHeaderList(mapSupport);
+		tree.createHeaderList(logFile.getKeyCount());
 
 		// (5) We start to mine the RP-Tree by calling the recursive method.
 		// Initially, the prefix alpha is empty.
@@ -184,20 +150,10 @@ public class AlgoRPGrowth {
 			// recursively generate rare itemsets using the RP-tree
 			// Note: we assume that the initial RP-Tree has more than one path
 			// which should generally be the case.
-			rpgrowth(tree, this.itemsetBuffer, 0, this.transactionCount, mapSupport);
+			rpgrowth(tree, this.itemsetBuffer, 0, this.transactionCount, logFile.getKeyCount());
 		}
 
-		// close the output file if the result was saved to a file
-		if(this.writer != null){
-			this.writer.close();
-		}
-		// record the execution end time
 		this.endTime= System.currentTimeMillis();
-
-		// check the memory usage
-		// VAS:commented_out MemoryLogger.getInstance().checkMemory();
-
-		// return the result (if saved to memory)
 		return this.patterns;
 	}
 
@@ -205,17 +161,18 @@ public class AlgoRPGrowth {
 
 	/**
 	 * Mine an RP-Tree having more than one path.
-	 * @param tree  the RP-tree
-	 * @param prefix  the current prefix, named "alpha"
-	 * @param mapSupport the frequency of items in the RP-Tree
-	 * @throws IOException  exception if error writing the output file
+	 * 
+	 * @param tree
+	 * @param prefix
+	 * @param prefixLength
+	 * @param prefixSupport
+	 * @param mapSupport
 	 */
-	private void rpgrowth(RPTree tree, int [] prefix, int prefixLength, int prefixSupport, Map<Integer, Integer> mapSupport) throws IOException {
+	private void rpgrowth(RPTree tree, int[] prefix, int prefixLength, int prefixSupport, Map<Integer, Integer> mapSupport) {
 
 		if(prefixLength == this.maxPatternLength) {
 			return;
 		}
-
 
 
 		////		======= DEBUG ========
@@ -358,13 +315,14 @@ public class AlgoRPGrowth {
 
 	/**
 	 * This method saves all combinations of a prefix path if it has enough support
-	 * @param prefix the current prefix
-	 * @param prefixLength the current prefix length
-	 * @param prefixPath the prefix path
-	 * @throws IOException if exception while writing to output file
+	 *
+	 * @param rpNodeTempBuffer
+	 * @param position
+	 * @param prefix
+	 * @param prefixLength
 	 */
 	private void saveAllCombinationsOfPrefixPath(RPNode[] rpNodeTempBuffer, int position,
-			int[] prefix, int prefixLength) throws IOException {
+			int[] prefix, int prefixLength) {
 		int support = 0;
 		if (prefixLength == 0) {
 			return;}
@@ -395,96 +353,32 @@ public class AlgoRPGrowth {
 	}
 
 
-	/**
-	 * This method scans the input database to calculate the support of single items
-	 * @param input the path of the input file
-	 * @throws IOException  exception if error while writing the file
-	 * @return a map for storing the support of each item (key: item, value: support)
-	 */
-	private  Map<Integer, Integer> scanDatabaseToDetermineFrequencyOfSingleItems(String input)
-			throws FileNotFoundException, IOException {
-		// a map for storing the support of each item (key: item, value: support)
-		Map<Integer, Integer> mapSupport = new HashMap<>();
-		//Create object for reading the input file
-		BufferedReader reader = new BufferedReader(new FileReader(input));
-		String line;
-		// for each line (transaction) until the end of file
-		while( ((line = reader.readLine())!= null)){
-			// if the line is  a comment, is  empty or is a
-			// kind of metadata
-			if ((line.isEmpty() == true) ||  (line.charAt(0) == '#') || (line.charAt(0) == '%') 	|| (line.charAt(0) == '@')) {
-				continue;
-			}
-
-			// split the line into items
-			String[] lineSplited = line.split(" ");
-			// for each item
-			for(String itemString : lineSplited){
-				// increase the support count of the item
-				Integer item = Integer.parseInt(itemString);
-				// increase the support count of the item
-				Integer count = mapSupport.get(item);
-				if(count == null){
-					mapSupport.put(item, 1);
-				}else{
-					mapSupport.put(item, ++count);
-				}
-			}
-			// increase the transaction count
-			this.transactionCount++;
-		}
-		// close the input file
-		reader.close();
-
-		return mapSupport;
-	}
-
 
 	/**
-	 * Write a frequent item set that is found to the output file or
-	 * keep into memory if the user prefer that the result be saved into memory.
+	 * Write a frequent item set that is found to the output file or keep into memory if the
+	 * user prefer that the result be saved into memory.
+	 *
+	 * @param itemset
+	 * @param itemsetLength
+	 * @param support
 	 */
-	private void setSupport(int [] itemset, int itemsetLength, int support) throws IOException {
+	private void setSupport(int[] itemset, int itemsetLength, int support) {
 
 		// increase the number of item sets found for statistics purpose
 		this.itemsetCount++;
 
-		// if the result should be saved to a file
-		if(this.writer != null){
-			// copy the item set in the output buffer and sort items
-			System.arraycopy(itemset, 0, this.itemsetOutputBuffer, 0, itemsetLength);
-			Arrays.sort(this.itemsetOutputBuffer, 0, itemsetLength);
+		// create an object Itemset and add it to the set of patterns
+		// found.
+		int[] itemsetArray = new int[itemsetLength];
+		System.arraycopy(itemset, 0, itemsetArray, 0, itemsetLength);
 
-			// Create a string buffer
-			StringBuilder buffer = new StringBuilder();
-			// write the items of the item set
-			for(int i=0; i< itemsetLength; i++){
-				buffer.append(this.itemsetOutputBuffer[i]);
-				if(i != (itemsetLength-1)){
-					buffer.append(' ');
-				}
-			}
-			// Then, write the support
-			buffer.append(" #SUP: ");
-			buffer.append(support);
-			// write to file and create a new line
-			this.writer.write(buffer.toString());
-			this.writer.newLine();
+		// sort the itemset so that it is sorted according to lexical ordering before we show it
+		// to the user
+		Arrays.sort(itemsetArray);
 
-		}// otherwise the result is kept into memory
-		else{
-			// create an object Itemset and add it to the set of patterns
-			// found.
-			int[] itemsetArray = new int[itemsetLength];
-			System.arraycopy(itemset, 0, itemsetArray, 0, itemsetLength);
-
-			// sort the itemset so that it is sorted according to lexical ordering before we show it to the user
-			Arrays.sort(itemsetArray);
-
-			Itemset itemsetObj = new Itemset(itemsetArray);
-			itemsetObj.setSupport(support);
-			this.patterns.addItemset(itemsetObj, itemsetLength);
-		}
+		Itemset itemsetObj = new Itemset(itemsetArray);
+		itemsetObj.setSupport(support);
+		this.patterns.addItemset(itemsetObj, itemsetLength);
 	}
 
 	/**

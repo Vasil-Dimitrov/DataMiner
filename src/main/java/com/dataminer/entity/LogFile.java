@@ -3,7 +3,9 @@ package com.dataminer.entity;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.dataminer.constant.Constant;
 import com.google.common.collect.BiMap;
@@ -18,6 +20,7 @@ import lombok.Setter;
 public class LogFile {
 	private List<UserSession> userSessionList = new ArrayList<>();
 	private BiMap<Integer, String> uniqueECMap = HashBiMap.create();
+	private Map<Integer, Integer> keyCount = new HashMap<>();
 
 	public void addLine(String line) {
 		String elements[] = line.split("\t");
@@ -32,6 +35,10 @@ public class LogFile {
 		if (!this.uniqueECMap.containsValue(rawLine.getEventContext())) {
 			lastKey = this.uniqueECMap.size() + 1;
 			this.uniqueECMap.put((lastKey), rawLine.getEventContext());
+			this.keyCount.put(lastKey, 1);
+		} else {
+			lastKey = this.uniqueECMap.inverse().get(rawLine.getEventContext());
+			this.keyCount.put(lastKey, this.keyCount.get(lastKey) + 1);
 		}
 
 		UserSession newUserSession;
