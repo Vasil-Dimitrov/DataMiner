@@ -4,17 +4,76 @@
     <th:block th:replace="fragments/header"></th:block>
 </head>
 <body>
-	<div layout:fragment="content" class="container">
-		<th:block th:replace="fragments/navbar"></th:block>
-
+	<th:block th:replace="fragments/navbar"></th:block>
+	<div class="container">
 		<div class="jumbotron">
-			<p>
-				Hello, this is the settings page, <br> it is still in construction though. <br> Please come back later! :)
-			</p>
-
+			<h5>Конфигурация на алгоритмите за анализ</h5>
+		
+			 <form method="POST" action="/settings" class="mt-5">
+			 	<!-- LCM options -->
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="switch1" checked>
+					<label class="custom-control-label" for="switch1">Най-често достъпвани евенти</label>
+					
+					<p id="text" style="display:none">Checkbox is CHECKED!</p>
+				</div>
+				<div class="form-inline ml-4 mt-1" id="lcm-options">
+					<label for="lcm-minsup">Minimum Support:</label>
+					<input type="text" class="form-control ml-2" id="lcm-minsup" placeholder="0.4">
+				</div>
+				
+				<!-- RPG options -->
+				<div class="custom-control custom-switch mt-2">
+					<input type="checkbox" class="custom-control-input" id="switch2"  checked>
+					<label class="custom-control-label" for="switch2">Най-рядко достъпвани евенти</label>
+				</div>
+				<div id="rpg-options" class="mt-1">
+					<div class="form-inline ml-4 mb-1">
+						<label for="rpg-minsup">Minimum Support:</label>
+						<input type="text" class="form-control ml-2" id="rpg-minsup" placeholder="0.2">
+					</div>
+					<div class="form-inline ml-4">
+						<label for="rpg-minraresup">Minimum Rare Support:</label>
+						<input type="text" class="form-control ml-2" id="rpg-minraresup" placeholder="0.3">
+					</div>
+				</div>
+				
+				<!-- VTSA options -->
+				<div class="custom-control custom-switch mt-2">
+					<input type="checkbox" class="custom-control-input" id="switch3"  checked>
+					<label class="custom-control-label" for="switch3">Седмичен времеви трафик</label>
+				</div>
+				
+				<div class="mt-4">
+					<button type="submit" class="btn btn-primary">Запази промените</button>
+				</div>
+			</form> 
+				
+		<!-- End of Jumbotron -->
 		</div>
 	</div>
 
 	<th:block th:replace="fragments/footer"></th:block>
+	
+	<script type="text/javascript">
+
+
+		$(document).ready(function(){
+			
+		    $('#switch1').change(function(){
+		        if(this.checked)
+		            $('#lcm-options').show(300);
+		        else
+		            $('#lcm-options').hide(200);
+		    });
+
+		    $('#switch2').change(function(){
+		        if(this.checked)
+		            $('#rpg-options').show(300);
+		        else
+		            $('#rpg-options').hide(200);
+		    });
+		});
+	</script>
 </body>
 </html>

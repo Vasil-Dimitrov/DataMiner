@@ -76,7 +76,7 @@ public class MockUtil {
 				maxNum = value;
 			}
 		}
-
 		return maxNum;
 	}
+
 }

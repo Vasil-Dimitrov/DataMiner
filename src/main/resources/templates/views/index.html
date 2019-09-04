@@ -13,9 +13,9 @@
 			<h2 th:text="${upload_message}"></h2>
 			
 			<!-- Custom upload file -->
-			<div class="container mb-5" th:if="${showStats}">
+			<div class="container mb-5" th:if="${showUploadOption}">
 				<form method="POST" action="/index" enctype="multipart/form-data">
-					<p>Качете избраният от вас .csv лог файл тук:</p>
+					<p>Качете избраният от вас .csv лог файл</p>
 					<div class="custom-file mb-3">
 						<input type="file" class="custom-file-input" id="customFile" name="filename">
 						<label class="custom-file-label" for="customFile">Избери лог файл</label>
@@ -39,6 +39,8 @@
 
 	</div>
 
+	<th:block th:replace="fragments/footer"></th:block>
+     
 	<script>
 		// the selected file's name to appear in the selection box
 		$(".custom-file-input").on("change", function() {
@@ -46,7 +48,5 @@
 		  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
 		});
 	</script>
-     
-	<th:block th:replace="fragments/footer"></th:block>
 </body>
 </html>

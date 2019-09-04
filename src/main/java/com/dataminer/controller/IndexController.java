@@ -6,11 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +44,7 @@ public class IndexController extends BaseController {
 	public ModelAndView showIndexPage(ModelAndView modelAndView) {
 		// processInputFile();
 		boolean showStats = true;
+		boolean showUploadOption = false;
 
 		if (showStats) {
 			modelAndView.addObject("commonItemSet", MockUtil.getMockUserEventList());
@@ -58,8 +55,13 @@ public class IndexController extends BaseController {
 
 			modelAndView.addObject("surveyMap", MockUtil.getMockTimeSomething());
 			modelAndView.addObject("surveyMapMaxValue", MockUtil.getMockTimeSomethingMaxValue());
+		} else {
+			modelAndView.addObject("commonItemSet", null);
+			modelAndView.addObject("rareItemSet", null);
+			modelAndView.addObject("surveyMap", null);
 		}
 		modelAndView.addObject("showStats", showStats);
+		modelAndView.addObject("showUploadOption", showUploadOption);
 		return view("index", modelAndView);
 	}
 
@@ -250,30 +252,4 @@ public class IndexController extends BaseController {
 		}
 	}
 
-	/////////////////// UI TESTING
-
-	@GetMapping("/home")
-	public String home(Model model) {
-		model.addAttribute("pass", 50);
-		model.addAttribute("fail", 50);
-		return "views/home";
-	}
-
-	@GetMapping("/displayBarGraph")
-	public String barGraph(Model model) {
-		Map<String, Integer> surveyMap = new LinkedHashMap<>();
-		surveyMap.put("Java", 40);
-		surveyMap.put("Dev oops", 115);
-		surveyMap.put("Python", 20);
-		surveyMap.put(".Net", 15);
-		model.addAttribute("surveyMap", surveyMap);
-		return "views/" + "barGraph";
-	}
-
-	@GetMapping("/displayPieChart")
-	public ModelAndView pieChart(ModelAndView model) {
-		model.addObject("pass", 50);
-		model.addObject("fail", 50);
-		return view("pieChart", model);
-	}
 }
