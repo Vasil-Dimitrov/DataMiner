@@ -2,6 +2,12 @@ package com.dataminer.constant;
 
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Class for defining common constants
+ *
+ * @author Vasil.Dimitrov^2
+ *
+ */
 public class Constant {
 
 	private Constant() {

@@ -4,7 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.dataminer.constant.View;
+
 /**
+ * Controller for working with the /help context
  *
  * @author Vasil.Dimitrov^2
  *
@@ -12,8 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HelpController extends BaseController {
 
-	@GetMapping("/help")
+	@GetMapping(View.HELP_URL)
 	public ModelAndView showHelpPage(ModelAndView modelAndView) {
-		return view("help");
+		return view(View.HELP_VIEW);
 	}
 }

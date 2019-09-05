@@ -2,6 +2,8 @@ package com.dataminer.controller;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import com.dataminer.constant.View;
+
 /**
  *
  * @author Vasil.Dimitrov^2
@@ -13,7 +15,7 @@ public abstract class BaseController {
 	}
 
 	public ModelAndView view(String viewName, ModelAndView model) {
-		model.setViewName("views/" + viewName);
+		model.setViewName(View.VIEWS_PREFIX + viewName);
 		return model;
 	}
 

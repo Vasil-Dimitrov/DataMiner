@@ -7,7 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.dataminer.constant.View;
+
 /**
+ * Controller for working with the /about and the /resources context
  *
  * @author Vasil.Dimitrov^2
  *
@@ -15,12 +18,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class AboutController extends BaseController {
 
-	@GetMapping("/about")
+	@GetMapping(View.ABOUT_URL)
 	public ModelAndView showAboutPage(ModelAndView modelAndView) {
-		return view("about");
+		return view(View.ABOUT_VIEW);
 	}
 
-	@GetMapping("/resources")
+	@GetMapping(View.RESOURCES_URL)
 	public ModelAndView showResourcesPage(ModelAndView modelAndView) {
 		List<String> resources = new ArrayList<>();
 		resources.add("https://www.google.com");
@@ -40,7 +43,7 @@ public class AboutController extends BaseController {
 		resources.add("https://getbootstrap.com/docs/4.0/components/navbar/");
 		resources.add("https://www.w3schools.com/css/");
 		modelAndView.addObject("resourcesUsed", resources);
-		return view("resources", modelAndView);
+		return view(View.RESOURCES_VIEW, modelAndView);
 	}
 
 }

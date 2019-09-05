@@ -19,6 +19,7 @@ import com.dataminer.algorithm.lcm.AlgoLCM;
 import com.dataminer.algorithm.lcm.Dataset;
 import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
 import com.dataminer.constant.Constant;
+import com.dataminer.constant.View;
 import com.dataminer.entity.LogFile;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
 import com.dataminer.util.HelperUtil;
@@ -27,15 +28,16 @@ import com.dataminer.util.MockUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * Home controller for working with the /index context
  *
  * @author Vasil.Dimitrov^2
  *
  */
 @Slf4j
 @Controller
-public class IndexController extends BaseController {
+public class HomeController extends BaseController {
 
-	@GetMapping({ "/", "/index" })
+	@GetMapping({ "/", View.INDEX_URL })
 	public ModelAndView showIndexPage(ModelAndView modelAndView) {
 		processInputFile();
 		boolean showStats = true;
@@ -57,10 +59,10 @@ public class IndexController extends BaseController {
 		}
 		modelAndView.addObject("showStats", showStats);
 		modelAndView.addObject("showUploadOption", showUploadOption);
-		return view("index", modelAndView);
+		return view(View.INDEX_VIEW, modelAndView);
 	}
 
-	@PostMapping("/index")
+	@PostMapping(View.INDEX_URL)
 	public ModelAndView uploadFile(@RequestParam("filename") MultipartFile file, RedirectAttributes redirectAttributes, ModelAndView mav) {
 		// redirectAttributes.addFlashAttribute("upload_message", "You successfully uploaded " +
 		// file.getOriginalFilename() + "!");
@@ -82,7 +84,7 @@ public class IndexController extends BaseController {
 		System.out.println(appleSauce);
 		System.out.println(fileValue);
 		mav.addObject("upload_message", "You successfully uploaded " + file.getOriginalFilename() + "!");
-		return view("index", mav);
+		return view(View.INDEX_VIEW, mav);
 
 	}
 
@@ -110,7 +112,6 @@ public class IndexController extends BaseController {
 		// System.out.println(logFile.toString());
 		System.out.println("Successfully created " + logFile.getUserSessionList().size() + " user session!");
 	}
-
 
 	/////////// DEBUG ALGORITHMS
 
@@ -155,6 +156,5 @@ public class IndexController extends BaseController {
 		status = 1;
 		return "RPGrowth run completed with status " + status;
 	}
-
 
 }

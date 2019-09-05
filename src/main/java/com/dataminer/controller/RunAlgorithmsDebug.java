@@ -10,7 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.dataminer.algorithm.lcm.AlgoLCM;
 import com.dataminer.algorithm.lcm.Dataset;
-import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
 import com.dataminer.constant.Constant;
 import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
 import com.dataminer.util.HelperUtil;
@@ -59,28 +58,30 @@ public class RunAlgorithmsDebug {
 	@GetMapping("/runRPGrowth")
 	@ResponseBody
 	public String runRPGrowth(ModelAndView modelAndView) {
+		/*- This is only temporarily left for debug purposes
 		int status = 0;
 		String input;
 		input = HelperUtil.fileToPath(Constant.debugFile);
-
+		
 		double minsup = 0.6; // means a minsup of 2 transaction (we used a relative support)
 		double minraresup = 0.1;
-
+		
 		// Applying the algorithm
 		AlgoRPGrowth algo = new AlgoRPGrowth();
-
+		
 		// Uncomment the following line to set the maximum pattern length (number of items per
 		// itemset, e.g. 3 )
-		// algo.setMaximumPatternLength(3);
-
+		algo.setMaximumPatternLength(3);
+		
 		// Run the algo
 		// // NOTE that here we use "null" as the output file path because we are saving to memory
-		// Itemsets patterns = algo.runAlgorithm(input, null, minsup, minraresup);
-		// algo.printStats();
+		Itemsets patterns = algo.runAlgorithm(input, null, minsup, minraresup);
+		algo.printStats();
 		//
-		// patterns.printItemsets();
+		patterns.printItemsets();
 		status = 1;
+		 */
 
-		return "RPGrowth run completed with status " + status;
+		return "This url is no logner available for call as the RPGGrowth run method has been changed too much to be used with a normal text file!";
 	}
 }
