@@ -10,8 +10,8 @@
 		</tr>
 		<tr th:each="item, iter : ${itemset}">
 			<td th:text="${iter.index + 1}"></td>
-			<td th:text="${item.eventContext}"></td>
-			<td th:text="${item.percent} + '%'"></td>
+			<td th:text="${item.key}"></td>
+			<td th:text="${item.value} + '%'"></td>
 		</tr>
 	</table>
 </div>

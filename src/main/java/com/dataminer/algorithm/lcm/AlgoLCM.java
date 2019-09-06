@@ -68,6 +68,7 @@ public class AlgoLCM {
 		// Since it is the empty set, we will have all transactions and no frequency count
 		backtrackingLCM(null, dataset.getTransactions(), allItems, -1);
 
+		this.closedFrequentItemsets.sortItemsets(true);
 		this.endTimestamp = System.currentTimeMillis();
 		return this.closedFrequentItemsets;
 	}

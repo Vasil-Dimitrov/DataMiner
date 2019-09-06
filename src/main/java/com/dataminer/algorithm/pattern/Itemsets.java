@@ -3,7 +3,11 @@ package com.dataminer.algorithm.pattern;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.dataminer.util.HelperUtil;
 
 import lombok.Getter;
 
@@ -50,12 +54,32 @@ public class Itemsets{
 		System.out.println(" --------------------------------");
 	}
 
-	/**
-	 * Sort the itemsets on the second level based on their support in descending order
-	 */
-	public void sortItemsets() {
+	public Map<int[], Double> getRelativeItemsets(int totalTransactionCount) {
+		Map<int[], Double> map = new LinkedHashMap<>();
 		for (List<Itemset> level : this.levels) {
-			Collections.sort(level, Collections.reverseOrder());
+			for (Itemset itemset : level) {
+				double percentage = (double) (100 * itemset.getAbsoluteSupport()) / totalTransactionCount;
+				map.put(itemset.getItemset(), HelperUtil.round(percentage, 2));
+			}
+		}
+		return map;
+	}
+
+	/**
+	 * Sort the itemsets on the second level. The sort order is chosen based on the passed
+	 * argument.
+	 *
+	 * @param reverseOrder
+	 */
+	public void sortItemsets(boolean reverseOrder) {
+		if (reverseOrder) {
+			for (List<Itemset> level : this.levels) {
+				Collections.sort(level, Collections.reverseOrder());
+			}
+		} else {
+			for (List<Itemset> level : this.levels) {
+				Collections.sort(level);
+			}
 		}
 	}
 

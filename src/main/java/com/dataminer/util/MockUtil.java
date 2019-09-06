@@ -1,6 +1,5 @@
 package com.dataminer.util;
 
-import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,7 +29,6 @@ public class MockUtil {
 
 	public static Map<String, Integer> getMockTimeSomething() {
 		Map<String, Integer> map = new LinkedHashMap<>();
-		DayOfWeek abs;
 		map.put("По 0:00-6:00", 15);
 		map.put("По 6:00-12:00", 20);
 		map.put("По 12:00-18:00", 14);

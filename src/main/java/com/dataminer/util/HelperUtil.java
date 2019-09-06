@@ -1,6 +1,8 @@
 package com.dataminer.util;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,5 +24,15 @@ public class HelperUtil {
 			log.debug(e.getMessage());
 			return "ako";
 		}
+	}
+
+	public static double round(double value, int places) {
+		if (places < 0) {
+			throw new IllegalArgumentException();
+		}
+
+		BigDecimal bd = BigDecimal.valueOf(value);
+		bd = bd.setScale(places, RoundingMode.HALF_UP);
+		return bd.doubleValue();
 	}
 }

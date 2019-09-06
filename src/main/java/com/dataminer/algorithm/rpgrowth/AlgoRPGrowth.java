@@ -38,7 +38,7 @@ public class AlgoRPGrowth {
 
 	// The  patterns that are found
 	// (if the user want to keep them into memory)
-	protected Itemsets patterns = null;
+	protected Itemsets rareItemset = null;
 
 	// This variable is used to determine the size of buffers to store itemsets.
 	// A value of 50 is enough because it allows up to 2^50 patterns!
@@ -67,7 +67,7 @@ public class AlgoRPGrowth {
 		this.itemsetCount = 0;
 
 		// if the user want to keep the result into memory
-		this.patterns = new Itemsets("RARE ITEMSETS");
+		this.rareItemset = new Itemsets("RARE ITEMSETS");
 
 		// (1) PREPROCESSING: frequency of each item
 		// The frequency is stored in a map:
@@ -148,8 +148,9 @@ public class AlgoRPGrowth {
 			rpgrowth(tree, this.itemsetBuffer, 0, this.transactionCount, logFile.getKeyCount());
 		}
 
+		this.rareItemset.sortItemsets(false);
 		this.endTime= System.currentTimeMillis();
-		return this.patterns;
+		return this.rareItemset;
 	}
 
 
@@ -373,7 +374,7 @@ public class AlgoRPGrowth {
 
 		Itemset itemsetObj = new Itemset(itemsetArray);
 		itemsetObj.setSupport(support);
-		this.patterns.addItemset(itemsetObj, itemsetLength);
+		this.rareItemset.addItemset(itemsetObj, itemsetLength);
 	}
 
 	/**

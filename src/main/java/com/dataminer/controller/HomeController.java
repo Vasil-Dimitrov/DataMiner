@@ -66,15 +66,20 @@ public class HomeController extends BaseController {
 			// add error
 		} else {
 			LogFile logFile = LogFile.createFromMultipartFile(mFile, algoSettings.getVtsa());
+			int sessionsCount = logFile.getUserSessionList().size();
 
 			if (algoSettings.getLcm()) {
-				Itemsets itemsets = new AlgoLCM().runAlgorithm(algoSettings.getLcmMinSup(), new Dataset(logFile));
-				itemsets.sortItemsets();
-				itemsets.printItemsets();
+				Dataset dataset = new Dataset(logFile);
+				Itemsets itemsets = new AlgoLCM().runAlgorithm(algoSettings.getLcmMinSup(), dataset);
+
+				mav.addObject("commonItemSet", itemsets.getRelativeItemsets(sessionsCount));
+				mav.addObject("commonItemSetTitle", Constant.commonItemSetTitle);
 			}
 			if (algoSettings.getRpg()) {
 				Itemsets itemsets = new AlgoRPGrowth().runAlgorithm(logFile, algoSettings.getRpgMinSup(), algoSettings.getRpgMinRareSup());
-				itemsets.printItemsets();
+
+				mav.addObject("rareItemSet", itemsets.getRelativeItemsets(sessionsCount));
+				mav.addObject("rareItemSetTitle", Constant.rareItemSetTitle);
 			}
 			if (algoSettings.getVtsa()) {
 				// do something nigga

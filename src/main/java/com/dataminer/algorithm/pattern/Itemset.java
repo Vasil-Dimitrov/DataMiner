@@ -5,6 +5,7 @@ import java.util.List;
 import com.dataminer.algorithm.lcm.AlgoLCM;
 import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
 
+import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -13,6 +14,7 @@ import lombok.Setter;
  *
  * @author Vasil.Dimitrov^2
  */
+@Getter
 public class Itemset extends AbstractOrderedItemset implements Comparable<Itemset> {
 	private int[] itemset;
 	@Setter
