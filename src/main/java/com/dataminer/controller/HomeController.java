@@ -2,10 +2,12 @@ package com.dataminer.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.dataminer.algorithm.lcm.AlgoLCM;
 import com.dataminer.algorithm.lcm.Dataset;
 import com.dataminer.algorithm.pattern.Itemsets;
@@ -40,10 +40,10 @@ public class HomeController extends BaseController {
 	@GetMapping({ "/", View.INDEX_URL })
 	public ModelAndView showIndexPage(ModelAndView modelAndView) {
 		processInputFile();
-		boolean showStats = true;
-		boolean showUploadOption = false;
+		boolean debug = false;
+		boolean showUploadOption = true;
 
-		if (showStats) {
+		if (debug) {
 			modelAndView.addObject("commonItemSet", MockUtil.getMockUserEventList());
 			modelAndView.addObject("commonItemSetTitle", Constant.commonItemSetTitle);
 
@@ -52,37 +52,31 @@ public class HomeController extends BaseController {
 
 			modelAndView.addObject("surveyMap", MockUtil.getMockTimeSomething());
 			modelAndView.addObject("surveyMapMaxValue", MockUtil.getMockTimeSomethingMaxValue());
-		} else {
-			modelAndView.addObject("commonItemSet", null);
-			modelAndView.addObject("rareItemSet", null);
-			modelAndView.addObject("surveyMap", null);
 		}
-		modelAndView.addObject("showStats", showStats);
+
 		modelAndView.addObject("showUploadOption", showUploadOption);
 		return view(View.INDEX_VIEW, modelAndView);
 	}
 
 	@PostMapping(View.INDEX_URL)
-	public ModelAndView uploadFile(@RequestParam("filename") MultipartFile file, RedirectAttributes redirectAttributes, ModelAndView mav) {
-		// redirectAttributes.addFlashAttribute("upload_message", "You successfully uploaded " +
-		// file.getOriginalFilename() + "!");
-		// return redirect("index");
-		String fileValue = "";
-		String appleSauce = "";
-		try {
-			appleSauce = new String(file.getBytes());
-		} catch (IOException e1) {
-			log.debug(e1.getMessage());
+	public ModelAndView uploadFile(@RequestParam("filename") MultipartFile file, ModelAndView mav) {
+
+		List<String> result2 = new ArrayList<>();
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.ISO_8859_1))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				result2.add(new String(line.getBytes("Cp1252"), "Cp1251"));
+			}
+
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
 		}
 
-		try {
-			fileValue = new String(appleSauce.getBytes("Cp1252"), "Cp1251");
-		} catch (UnsupportedEncodingException e) {
-			log.debug(e.getMessage());
+		for (String txt : result2) {
+			System.out.println(txt);
+			System.out.println("\n=============================================================================================\n");
 		}
 
-		System.out.println(appleSauce);
-		System.out.println(fileValue);
 		mav.addObject("upload_message", "You successfully uploaded " + file.getOriginalFilename() + "!");
 		return view(View.INDEX_VIEW, mav);
 
@@ -106,10 +100,10 @@ public class HomeController extends BaseController {
 		} catch (IOException e) {
 			log.error(e.toString());
 		}
-		runLCMFromLog(logFile);
-		runRPGGrowthFromLog(logFile);
+		// runLCMFromLog(logFile);
+		// runRPGGrowthFromLog(logFile);
 
-		// System.out.println(logFile.toString());
+		System.out.println(logFile.toString());
 		System.out.println("Successfully created " + logFile.getUserSessionList().size() + " user session!");
 	}
 

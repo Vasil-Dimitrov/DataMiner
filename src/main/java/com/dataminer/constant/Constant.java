@@ -28,8 +28,8 @@ public class Constant {
 	public static final String rareItemSetTitle = "Най-рядко достъпвани евенти";
 
 	public static final String debugFile = "contextPasquier99.txt";
-	public static final String debugReadFile = "logs_BCS37_20181103_UTF-8.csv";
-	//	public static final String debugReadFile = "logs_BCS37_20181103_UTF-8-small.csv";
+	//	public static final String debugReadFile = "logs_BCS37_20181103_UTF-8.csv";
+	public static final String debugReadFile = "logs_BCS37_20181103_UTF-8-small-bg.csv";
 
 	public static final int DEFAULT_ALGO_SETTINGS_ID = 1;
 }
