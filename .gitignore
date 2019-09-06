@@ -1,0 +1,12 @@
+#ignore directories:
+bin/
+gradle/
+build/
+.gradle/
+.settings/
+test_files/
+log_folder/
+
+#ignore files:
+gradlew
+gradlew.bat
