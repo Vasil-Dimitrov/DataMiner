@@ -41,7 +41,7 @@ public class AlgoLCM {
 	 */
 	public Itemsets runAlgorithm(double minimumSupport, Dataset dataset) {
 		this.startTimestamp = System.currentTimeMillis();
-		this.closedFrequentItemsets = new Itemsets("Itemsets");
+		this.closedFrequentItemsets = new Itemsets("Closed Frequent Itemsets");
 		this.minsupRelative = (int) Math.ceil(minimumSupport * dataset.getTransactions().size());
 
 		// Create the initial occurrence array for the dataset
