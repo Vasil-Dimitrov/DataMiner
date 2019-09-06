@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dataminer.algorithm.pattern.Itemset;
+
 /**
  * This is an implementation of a RPTree  as used by the RPGrowth algorithm.
  *

@@ -1,4 +1,4 @@
-package com.dataminer.pattern.itemset_array_integers_with_count;
+package com.dataminer.algorithm.pattern;
 
 
 import java.util.ArrayList;

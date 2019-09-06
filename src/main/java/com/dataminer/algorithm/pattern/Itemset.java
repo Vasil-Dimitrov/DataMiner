@@ -1,10 +1,9 @@
-package com.dataminer.pattern.itemset_array_integers_with_count;
+package com.dataminer.algorithm.pattern;
 import java.util.Arrays;
 import java.util.List;
 
 import com.dataminer.algorithm.lcm.AlgoLCM;
 import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
-import com.dataminer.pattern.AbstractOrderedItemset;
 
 import lombok.Setter;
 

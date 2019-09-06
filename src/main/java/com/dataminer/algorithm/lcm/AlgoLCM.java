@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.dataminer.pattern.itemset_array_integers_with_count.Itemset;
-import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
+import com.dataminer.algorithm.pattern.Itemset;
+import com.dataminer.algorithm.pattern.Itemsets;
 
 /**
  * This is an implementation of the LCM algorithm for mining frequent closed itemsets from

@@ -1,4 +1,4 @@
-package com.dataminer.entity;
+package com.dataminer.pojo;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

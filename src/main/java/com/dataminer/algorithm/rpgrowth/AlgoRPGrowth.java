@@ -14,10 +14,10 @@ import java.util.Map;
 
 import org.springframework.util.CollectionUtils;
 
-import com.dataminer.entity.LogFile;
-import com.dataminer.entity.UserSession;
-import com.dataminer.pattern.itemset_array_integers_with_count.Itemset;
-import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
+import com.dataminer.algorithm.pattern.Itemset;
+import com.dataminer.algorithm.pattern.Itemsets;
+import com.dataminer.pojo.LogFile;
+import com.dataminer.pojo.UserSession;
 
 /**
  * This is an optimized implementation of the Rare Pattern Tree Mining algorithm using the

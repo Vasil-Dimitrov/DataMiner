@@ -10,8 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.dataminer.algorithm.lcm.AlgoLCM;
 import com.dataminer.algorithm.lcm.Dataset;
+import com.dataminer.algorithm.pattern.Itemsets;
 import com.dataminer.constant.Constant;
-import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
 import com.dataminer.util.HelperUtil;
 
 import lombok.extern.slf4j.Slf4j;

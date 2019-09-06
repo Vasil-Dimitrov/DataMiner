@@ -24,6 +24,7 @@ public class DataMinerApplication {
 		} else {
 			longStart(args);
 		}
+
 	}
 
 	public static void shortStart(String[] args) {

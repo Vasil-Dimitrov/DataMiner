@@ -17,11 +17,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dataminer.algorithm.lcm.AlgoLCM;
 import com.dataminer.algorithm.lcm.Dataset;
+import com.dataminer.algorithm.pattern.Itemsets;
 import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
 import com.dataminer.constant.Constant;
 import com.dataminer.constant.View;
-import com.dataminer.entity.LogFile;
-import com.dataminer.pattern.itemset_array_integers_with_count.Itemsets;
+import com.dataminer.pojo.LogFile;
 import com.dataminer.util.HelperUtil;
 import com.dataminer.util.MockUtil;
 

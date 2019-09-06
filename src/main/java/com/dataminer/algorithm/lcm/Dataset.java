@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.dataminer.entity.LogFile;
-import com.dataminer.entity.UserSession;
+import com.dataminer.pojo.LogFile;
+import com.dataminer.pojo.UserSession;
 /**
  * This is the parser class for the dataset. It has actions related to parse a txt based
  * file to a Dataset class.

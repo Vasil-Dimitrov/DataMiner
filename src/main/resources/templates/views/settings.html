@@ -7,41 +7,52 @@
 	<th:block th:replace="fragments/navbar"></th:block>
 	<div class="container">
 		<div class="jumbotron">
+			<div th:if="${success_msg != null and !success_msg.empty}" class="alert alert-success pb-0 text-center">
+				<p th:text="${success_msg}"></p>
+			</div>
+			<div th:if="${error_msg != null and !error_msg.empty}" class="alert alert-danger pb-0 text-center">
+				<p th:text="${error_msg}"></p>
+			</div>
+		
 			<h5>Конфигурация на алгоритмите за анализ</h5>
 		
-			 <form method="POST" action="/settings" class="mt-5">
+			 <form th:action="@{/settings}" th:object="${algoSettings}" method="POST" class="mt-5">
+			 	<input type="hidden" th:field="*{ID}" />
+			 
 			 	<!-- LCM options -->
 				<div class="custom-control custom-switch">
-					<input type="checkbox" class="custom-control-input" id="switch1" checked>
+					<input type="checkbox" class="custom-control-input" id="switch1" th:field="*{lcm}">
 					<label class="custom-control-label" for="switch1">Най-често достъпвани евенти</label>
-					
-					<p id="text" style="display:none">Checkbox is CHECKED!</p>
 				</div>
-				<div class="form-inline ml-4 mt-1" id="lcm-options">
+				<div class="form-inline ml-4 mt-1" id="switch-options-1">
 					<label for="lcm-minsup">Minimum Support:</label>
-					<input type="text" class="form-control ml-2" id="lcm-minsup" placeholder="0.4">
+					<input type="text"  th:field="*{lcmMinSup}" class="form-control ml-2" id="lcm-minsup" >
 				</div>
 				
 				<!-- RPG options -->
 				<div class="custom-control custom-switch mt-2">
-					<input type="checkbox" class="custom-control-input" id="switch2"  checked>
+					<input type="checkbox" class="custom-control-input" id="switch2" th:field="*{rpg}">
 					<label class="custom-control-label" for="switch2">Най-рядко достъпвани евенти</label>
 				</div>
-				<div id="rpg-options" class="mt-1">
+				<div id="switch-options-2" class="mt-1">
 					<div class="form-inline ml-4 mb-1">
 						<label for="rpg-minsup">Minimum Support:</label>
-						<input type="text" class="form-control ml-2" id="rpg-minsup" placeholder="0.2">
+						<input type="text" class="form-control ml-2" id="rpg-minsup" th:field="*{rpgMinSup}">
 					</div>
 					<div class="form-inline ml-4">
 						<label for="rpg-minraresup">Minimum Rare Support:</label>
-						<input type="text" class="form-control ml-2" id="rpg-minraresup" placeholder="0.3">
+						<input type="text" class="form-control ml-2" id="rpg-minraresup" th:field="*{rpgMinRareSup}">
 					</div>
 				</div>
 				
 				<!-- VTSA options -->
 				<div class="custom-control custom-switch mt-2">
-					<input type="checkbox" class="custom-control-input" id="switch3"  checked>
+					<input type="checkbox" class="custom-control-input" th:field="*{vtsa}" id="switch3">
 					<label class="custom-control-label" for="switch3">Седмичен времеви трафик</label>
+				</div>
+				<div class="form-inline ml-4 mt-1" id="switch-options-3">
+					<label for="vtsa-hourinterval">Hour Interval:</label>
+						<input type="text" class="form-control ml-2" id="rpg-minraresup" th:field="*{vtsaHourInterval}">
 				</div>
 				
 				<div class="mt-4">
@@ -57,23 +68,27 @@
 	
 	<script type="text/javascript">
 
-
 		$(document).ready(function(){
-			
-		    $('#switch1').change(function(){
-		        if(this.checked)
-		            $('#lcm-options').show(300);
-		        else
-		            $('#lcm-options').hide(200);
-		    });
-
-		    $('#switch2').change(function(){
-		        if(this.checked)
-		            $('#rpg-options').show(300);
-		        else
-		            $('#rpg-options').hide(200);
-		    });
+		    function check() {
+		        var $checkbox = $(this);
+		        var num = $checkbox.attr('id').match(/switch([0-9]+)/)[1];
+		        if ($checkbox.is(':checked')) {
+		            $('#switch-options-' + num).show();
+		        } else {
+		            $('#switch-options-' + num).hide();
+		        }
+		    }
+		    $('input[type=checkbox]').each(check)//.change(check);
 		});
+
+	    $('input[type=checkbox]').change(function() {
+	        var num = $(this).attr('id').match(/switch([0-9]+)/)[1];
+	        if (this.checked) {
+	            $('#switch-options-' + num).show(350);
+	        } else {
+	            $('#switch-options-' + num).hide(350);
+	        }
+	    });
 	</script>
 </body>
 </html>

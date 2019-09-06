@@ -1,4 +1,4 @@
-package com.dataminer.pattern;
+package com.dataminer.algorithm.pattern;
 
 /* This file is copyright (c) 2008-2012 Philippe Fournier-Viger
  *
@@ -25,7 +25,7 @@ package com.dataminer.pattern;
  *  @see AbstractItemset
  * @author Philippe Fournier-Viger
  */
-public abstract class AbstractOrderedItemset extends AbstractItemset{
+public abstract class AbstractOrderedItemset extends AbstractItemset {
 
 	public AbstractOrderedItemset() {
 		super();

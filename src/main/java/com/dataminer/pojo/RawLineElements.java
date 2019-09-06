@@ -1,4 +1,4 @@
-package com.dataminer.entity;
+package com.dataminer.pojo;
 
 import com.dataminer.constant.Constant;
 

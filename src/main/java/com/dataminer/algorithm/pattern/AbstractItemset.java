@@ -1,4 +1,4 @@
-package com.dataminer.pattern;
+package com.dataminer.algorithm.pattern;
 
 /* This file is copyright (c) 2008-2012 Philippe Fournier-Viger
  *

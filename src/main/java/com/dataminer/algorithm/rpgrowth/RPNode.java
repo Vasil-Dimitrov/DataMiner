@@ -5,6 +5,8 @@ package com.dataminer.algorithm.rpgrowth;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dataminer.algorithm.pattern.Itemset;
+
 /**
  * This is an implementation of a RPTree node as used by the RPGrowth algorithm.
  *

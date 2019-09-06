@@ -1,4 +1,4 @@
-package com.dataminer.entity;
+package com.dataminer.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
