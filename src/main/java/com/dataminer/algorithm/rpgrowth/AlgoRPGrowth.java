@@ -2,8 +2,6 @@ package com.dataminer.algorithm.rpgrowth;
 
 
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -63,11 +61,8 @@ public class AlgoRPGrowth {
 	 * @param minsupp
 	 * @param minraresupp
 	 * @return
-	 * @throws FileNotFoundException
-	 * @throws IOException
 	 */
-	public Itemsets runAlgorithm(LogFile logFile, double minsupp, double minraresupp)
-			throws FileNotFoundException, IOException {
+	public Itemsets runAlgorithm(LogFile logFile, double minsupp, double minraresupp) {
 		this.startTimestamp = System.currentTimeMillis();
 		this.itemsetCount = 0;
 
@@ -161,7 +156,7 @@ public class AlgoRPGrowth {
 
 	/**
 	 * Mine an RP-Tree having more than one path.
-	 * 
+	 *
 	 * @param tree
 	 * @param prefix
 	 * @param prefixLength
@@ -388,8 +383,6 @@ public class AlgoRPGrowth {
 		System.out.println("=============  RP-GROWTH 2.38 - STATS =============");
 		long temps = this.endTime - this.startTimestamp;
 		System.out.println(" Transactions count from database : " + this.transactionCount);
-		// VAS:commented_out System.out.print(" Max memory usage: " +
-		// MemoryLogger.getInstance().getMaxMemory() + " mb \n");
 		System.out.println(" Rare itemsets count : " + this.itemsetCount);
 		System.out.println(" Total time ~ " + temps + " ms");
 		System.out.println("===================================================");

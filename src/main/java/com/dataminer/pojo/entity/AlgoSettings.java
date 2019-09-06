@@ -38,6 +38,15 @@ public class AlgoSettings {
 	@Column(nullable = false)
 	private Integer vtsaHourInterval;
 
+	/**
+	 * Method for checking if all the algorithms are disabled
+	 *
+	 * @return
+	 */
+	public boolean areAllAlgorithmsDisabled() {
+		return !(this.lcm || this.rpg || this.vtsa);
+	}
+
 	@Override
 	public String toString() {
 		return String.format(

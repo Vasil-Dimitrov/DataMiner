@@ -1,11 +1,17 @@
 package com.dataminer.pojo;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dataminer.constant.Constant;
 import com.google.common.collect.BiMap;
@@ -22,7 +28,12 @@ public class LogFile {
 	private BiMap<Integer, String> uniqueECMap = HashBiMap.create();
 	private Map<Integer, Integer> keyCount = new HashMap<>();
 
-	public void addLine(String line) {
+	/**
+	 * Method for adding a log line to the {@link LogFile} object
+	 *
+	 * @param line
+	 */
+	public void addLine(String line, boolean isVtsaOn) {
 		String elements[] = line.split("\t");
 		Integer lastKey = null;
 		if (elements.length != Constant.LOG_FILE_VALID_SIZE) {
@@ -44,8 +55,8 @@ public class LogFile {
 		UserSession newUserSession;
 		try {
 			newUserSession = new UserSession(rawLine.getIp(),
-					LocalDateTime.parse(rawLine.getDateTime(), Constant.LOG_FILE_DATE_TIME_FORMAT),
-					lastKey != null ? lastKey : this.uniqueECMap.inverse().get(rawLine.getEventContext()));
+					isVtsaOn ? LocalDateTime.parse(rawLine.getDateTime(), Constant.LOG_FILE_DATE_TIME_FORMAT) : null,
+							lastKey != null ? lastKey : this.uniqueECMap.inverse().get(rawLine.getEventContext()));
 		} catch (DateTimeParseException e) {
 			e.printStackTrace();
 			return;
@@ -60,12 +71,31 @@ public class LogFile {
 		}
 	}
 
+
+	/**
+	 * Create a LogFile out of a MultipartFile. Supports Cyrillic encoding.
+	 *
+	 * @param mFile
+	 * @return
+	 */
+	public static LogFile createFromMultipartFile(MultipartFile mFile, boolean isVtsaOn) {
+
+		LogFile logFile = new LogFile();
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(mFile.getInputStream(), StandardCharsets.ISO_8859_1))) {
+			// br.readLine();
+			String line;
+			while ((line = br.readLine()) != null) {
+				logFile.addLine(new String(line.getBytes("Cp1252"), "Cp1251"), isVtsaOn);
+			}
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+		}
+
+		return logFile;
+	}
+
 	/*
-	 *
-	 * (non-Javadoc) This toString has been implemented with a limiter as the object itself is
-	 * too big
-	 *
-	 * @see java.lang.Object#toString()
+	 * This toString has been implemented with a limiter as the object itself is too big
 	 */
 	@Override
 	public String toString() {

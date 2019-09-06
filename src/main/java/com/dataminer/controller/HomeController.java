@@ -1,14 +1,6 @@
 package com.dataminer.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +14,8 @@ import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
 import com.dataminer.constant.Constant;
 import com.dataminer.constant.View;
 import com.dataminer.pojo.LogFile;
-import com.dataminer.util.HelperUtil;
+import com.dataminer.pojo.entity.AlgoSettings;
+import com.dataminer.service.AlgoSettingsService;
 import com.dataminer.util.MockUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +30,16 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class HomeController extends BaseController {
 
+	@Autowired
+	private final AlgoSettingsService algoSettingsService;
+
+	@Autowired
+	public HomeController(AlgoSettingsService service) {
+		this.algoSettingsService = service;
+	}
+
 	@GetMapping({ "/", View.INDEX_URL })
 	public ModelAndView showIndexPage(ModelAndView modelAndView) {
-		processInputFile();
 		boolean debug = false;
 		boolean showUploadOption = true;
 
@@ -59,96 +59,31 @@ public class HomeController extends BaseController {
 	}
 
 	@PostMapping(View.INDEX_URL)
-	public ModelAndView uploadFile(@RequestParam("filename") MultipartFile file, ModelAndView mav) {
+	public ModelAndView uploadFile(@RequestParam("filename") MultipartFile mFile, ModelAndView mav) {
+		AlgoSettings algoSettings = this.algoSettingsService.getDefaultAlgoSettings();
 
-		List<String> result2 = new ArrayList<>();
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.ISO_8859_1))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				result2.add(new String(line.getBytes("Cp1252"), "Cp1251"));
+		if (algoSettings.areAllAlgorithmsDisabled()) {
+			// add error
+		} else {
+			LogFile logFile = LogFile.createFromMultipartFile(mFile, algoSettings.getVtsa());
+
+			if (algoSettings.getLcm()) {
+				Itemsets itemsets = new AlgoLCM().runAlgorithm(algoSettings.getLcmMinSup(), new Dataset(logFile));
+				itemsets.sortItemsets();
+				itemsets.printItemsets();
 			}
-
-		} catch (IOException e) {
-			System.err.println(e.getMessage());
+			if (algoSettings.getRpg()) {
+				Itemsets itemsets = new AlgoRPGrowth().runAlgorithm(logFile, algoSettings.getRpgMinSup(), algoSettings.getRpgMinRareSup());
+				itemsets.printItemsets();
+			}
+			if (algoSettings.getVtsa()) {
+				// do something nigga
+			}
 		}
 
-		for (String txt : result2) {
-			System.out.println(txt);
-			System.out.println("\n=============================================================================================\n");
-		}
-
-		mav.addObject("upload_message", "You successfully uploaded " + file.getOriginalFilename() + "!");
+		mav.addObject("upload_message", "You successfully uploaded " + mFile.getOriginalFilename() + "!");
 		return view(View.INDEX_VIEW, mav);
 
-	}
-
-	private void processInputFile() {
-		String filePath = HelperUtil.fileToPath(Constant.debugReadFile);
-		LogFile logFile = new LogFile();
-
-		try (BufferedReader br = Files.newBufferedReader(Paths.get(filePath), StandardCharsets.ISO_8859_1)) {
-			String line;
-			String tempText;
-			for (int i = 0; (line = br.readLine()) != null; i++) {
-				if (i == 0) {
-					continue;
-				}
-
-				tempText = new String(line.getBytes("Cp1252"), "Cp1251");
-				logFile.addLine(tempText);
-			}
-		} catch (IOException e) {
-			log.error(e.toString());
-		}
-		// runLCMFromLog(logFile);
-		// runRPGGrowthFromLog(logFile);
-
-		System.out.println(logFile.toString());
-		System.out.println("Successfully created " + logFile.getUserSessionList().size() + " user session!");
-	}
-
-	/////////// DEBUG ALGORITHMS
-
-	public String runLCMFromLog(LogFile logFile) {
-		int status = 0;
-		double minsup = 0.2;
-		Dataset dataset = new Dataset(logFile);
-
-		// Applying the algorithm
-		AlgoLCM algo = new AlgoLCM();
-		// if true in next line it will find only closed itemsets, otherwise, all frequent
-		// itemsets
-		Itemsets itemsets = algo.runAlgorithm(minsup, dataset);
-		itemsets.sortItemsets();
-		algo.printStats();
-
-		itemsets.printItemsets();
-		status = 1;
-
-		return "LCM run completed with status " + status;
-	}
-
-	public String runRPGGrowthFromLog(LogFile logFile) {
-		int status = 0;
-		double minsup = 0.32;
-		double minraresup = 0.15;
-
-		AlgoRPGrowth algo = new AlgoRPGrowth();
-
-		Itemsets patterns = null;
-
-		try {
-			patterns = algo.runAlgorithm(logFile, minsup, minraresup);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		algo.printStats();
-
-		patterns.printItemsets();
-		status = 1;
-		return "RPGrowth run completed with status " + status;
 	}
 
 }
