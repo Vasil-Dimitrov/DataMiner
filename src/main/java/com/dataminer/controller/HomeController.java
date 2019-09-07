@@ -18,6 +18,7 @@ import com.dataminer.algorithm.lcm.Dataset;
 import com.dataminer.algorithm.pattern.Itemsets;
 import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
 import com.dataminer.constant.Constant;
+import com.dataminer.constant.RequestAttribute;
 import com.dataminer.constant.View;
 import com.dataminer.pojo.LogFile;
 import com.dataminer.pojo.entity.AlgoSettings;
@@ -46,68 +47,55 @@ public class HomeController extends BaseController {
 
 	@GetMapping({ "/", View.INDEX_URL })
 	public ModelAndView showIndexPage(ModelAndView modelAndView) {
-		boolean debug = false;
-		boolean showUploadOption = true;
-
-		if (debug) {
-			modelAndView.addObject("commonItemSet", MockUtil.getMockUserEventList());
-			modelAndView.addObject("commonItemSetTitle", Constant.commonItemSetTitle);
-
-			modelAndView.addObject("rareItemSet", MockUtil.getMockRareUserEventList());
-			modelAndView.addObject("rareItemSetTitle", Constant.rareItemSetTitle);
-
-			modelAndView.addObject("surveyMap", MockUtil.getMockTimeSomething());
-			modelAndView.addObject("surveyMapMaxValue", MockUtil.getMockTimeSomethingMaxValue());
-		}
-
-		modelAndView.addObject("showUploadOption", showUploadOption);
 		return view(View.INDEX_VIEW, modelAndView);
 	}
 
 	@PostMapping(View.INDEX_URL)
-	public ModelAndView uploadFile(@RequestParam("filename") MultipartFile mFile, ModelAndView mav) {
+	public ModelAndView uploadFile(@RequestParam(RequestAttribute.FILE) MultipartFile mFile, ModelAndView mav) {
 		AlgoSettings algoSettings = this.algoSettingsService.getDefaultAlgoSettings();
 		boolean debug = true;
 
 		if (algoSettings.areAllAlgorithmsDisabled()) {
-			// add error
-		} else {
-			LogFile logFile = null;
-			int sessionsCount = 0;
-			if (!debug) {
-				logFile = LogFile.createFromMultipartFile(mFile, algoSettings.getVtsa());
-				sessionsCount = logFile.getUserSessionList().size();
-			}
+			mav.addObject(RequestAttribute.ERROR_MSG, "Моля активирайте поне един алгоритъм от настройките!");
+			return view(View.INDEX_VIEW, mav);
+		}
 
-			if (algoSettings.getLcm()) {
-				if (debug) {
-					mav.addObject("commonItemSet", MockUtil.getMockUserEventList());
-					mav.addObject("commonItemSetTitle", Constant.commonItemSetTitle);
-				} else {
-					Dataset dataset = new Dataset(logFile);
-					Itemsets itemsets = new AlgoLCM().runAlgorithm(algoSettings.getLcmMinSup(), dataset);
-					mav.addObject("commonItemSet", itemsets.getRelativeItemsets(sessionsCount));
-					mav.addObject("commonItemSetTitle", Constant.commonItemSetTitle);
-				}
-			}
-			if (algoSettings.getRpg()) {
-				if (debug) {
-					mav.addObject("rareItemSet", MockUtil.getMockRareUserEventList());
-					mav.addObject("rareItemSetTitle", Constant.rareItemSetTitle);
-				} else {
-					Itemsets itemsets = new AlgoRPGrowth().runAlgorithm(logFile, algoSettings.getRpgMinSup(),
-							algoSettings.getRpgMinRareSup());
-					mav.addObject("rareItemSet", itemsets.getRelativeItemsets(sessionsCount));
-					mav.addObject("rareItemSetTitle", Constant.rareItemSetTitle);
-				}
-			}
-			if (algoSettings.getVtsa()) {
-				if (debug) {
-					mav.addObject("surveyMap", MockUtil.getMockTimeSomething());
-					mav.addObject("surveyMapMaxValue", MockUtil.getMockTimeSomethingMaxValue());
-				}
+		LogFile logFile = null;
+		int sessionsCount = 0;
+		if (!debug) {
+			logFile = LogFile.createFromMultipartFile(mFile, algoSettings.getVtsa());
+			sessionsCount = logFile.getUserSessionList().size();
+		}
+
+		if (algoSettings.getLcm()) {
+			if (debug) {
+				mav.addObject(RequestAttribute.LCM_DATA, MockUtil.getMockUserEventList());
+				mav.addObject(RequestAttribute.LCM_TITLE, Constant.LCM_TITLE_TEXT);
+			} else {
+				Dataset dataset = new Dataset(logFile);
+				Itemsets itemsets = new AlgoLCM().runAlgorithm(algoSettings.getLcmMinSup(), dataset);
+				mav.addObject(RequestAttribute.LCM_DATA, itemsets.getRelativeItemsets(sessionsCount));
+				mav.addObject(RequestAttribute.LCM_TITLE, Constant.LCM_TITLE_TEXT);
 			}
 		}
+		if (algoSettings.getRpg()) {
+			if (debug) {
+				mav.addObject(RequestAttribute.RPG_DATA, MockUtil.getMockRareUserEventList());
+				mav.addObject(RequestAttribute.RPG_TITLE, Constant.RPG_TITLE_TEXT);
+			} else {
+				Itemsets itemsets = new AlgoRPGrowth().runAlgorithm(logFile, algoSettings.getRpgMinSup(),
+						algoSettings.getRpgMinRareSup());
+				mav.addObject(RequestAttribute.RPG_DATA, itemsets.getRelativeItemsets(sessionsCount));
+				mav.addObject(RequestAttribute.RPG_TITLE, Constant.RPG_TITLE_TEXT);
+			}
+		}
+		if (algoSettings.getVtsa()) {
+			if (debug) {
+				mav.addObject(RequestAttribute.VTSA_DATA, MockUtil.getMockTimeSomething());
+				mav.addObject(RequestAttribute.VTSA_TITLE, MockUtil.getMockTimeSomethingMaxValue());
+			}
+		}
+
 
 		// VASIL TODO: add proper logic here
 		String fileText = "This will be the text in a file!";
@@ -124,7 +112,7 @@ public class HomeController extends BaseController {
 			e.printStackTrace();
 		}
 
-		mav.addObject("success_msg", "Файл " + mFile.getOriginalFilename() + " бе успешно обработен!");
+		mav.addObject(RequestAttribute.SUCCESS_MSG, "Файл " + mFile.getOriginalFilename() + " бе успешно обработен!");
 		return view(View.INDEX_VIEW, mav);
 
 	}
