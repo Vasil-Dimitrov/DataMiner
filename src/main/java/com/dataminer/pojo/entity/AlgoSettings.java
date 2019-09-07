@@ -8,6 +8,12 @@ import javax.persistence.Id;
 
 import lombok.Data;
 
+/**
+ * Class representation of DB table algo_settings
+ *
+ * @author Vasil.Dimitrov^2
+ *
+ */
 @Data
 @Entity(name = "algo_settings")
 public class AlgoSettings {

@@ -129,7 +129,7 @@ public class HomeController extends BaseController {
 
 	}
 
-	@GetMapping("/download")
+	@GetMapping(View.DOWNLOAD_URL)
 	@ResponseBody
 	public FileSystemResource downloadFile() {
 		File file = new File(Constant.FILE_UPLOAD_DIR);
@@ -139,9 +139,9 @@ public class HomeController extends BaseController {
 				FileWriter fw = new FileWriter(file, false);
 				fw.write("Файлът не бе намерен, моля опитайте да генерирате фалът отново чрез извършване на нов анализ от лог");
 				fw.close();
+				log.warn("Client tried retrieving file with analysis, but it was missing!");
 			} catch (IOException e) {
-				log.debug("Something!");
-				e.printStackTrace();
+				log.error("Exception occurred trying to recreate a misssing analysis file!", e);
 			}
 		}
 		return new FileSystemResource(new File(Constant.FILE_UPLOAD_DIR));

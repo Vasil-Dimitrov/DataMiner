@@ -11,5 +11,5 @@ import com.dataminer.pojo.entity.AlgoSettings;
  *
  */
 public interface AlgoSettingsRepository extends CrudRepository<AlgoSettings, Integer> {
-
 }
+

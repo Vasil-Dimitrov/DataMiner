@@ -16,6 +16,7 @@ public class View {
 	public static final String HOME_PATH = "/";
 	public static final String INDEX_VIEW = "index";
 	public static final String INDEX_URL = "/index";
+	public static final String DOWNLOAD_URL = "/download";
 	// AboutController
 	public static final String ABOUT_VIEW = "about";
 	public static final String ABOUT_URL = "/about";

@@ -2,12 +2,21 @@ package com.dataminer.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dataminer.constant.Constant;
 import com.dataminer.pojo.entity.AlgoSettings;
 import com.dataminer.repository.AlgoSettingsRepository;
 
+/**
+ * Service class that implements Repository methods for working with {@link AlgoSettings}
+ * entity
+ *
+ * @author Vasil.Dimitrov^2
+ *
+ */
 @Service
+@Transactional(readOnly = false)
 public class AlgoSettingsServiceImpl implements AlgoSettingsService {
 	private final AlgoSettingsRepository repository;
 
@@ -25,6 +34,5 @@ public class AlgoSettingsServiceImpl implements AlgoSettingsService {
 	public boolean saveAlgoSettings(AlgoSettings algoSettings) {
 		return this.repository.save(algoSettings) != null;
 	}
-
 
 }
