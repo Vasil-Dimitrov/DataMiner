@@ -19,7 +19,7 @@
 				<tr th:each="resource, iter : ${resourcesUsed}">
 					<td th:text="${iter.index + 1}"></td>
 					<td>
-					<a th:href="${resource}" th:text="${resource}"></a>
+					<a  target="_blank" th:href="${resource}" th:text="${resource}"></a>
 					</td>
 				</tr>
 			</table>

@@ -11,6 +11,23 @@ ul {
 	/*background-color: #0356fc;*/
 }
 
+.custom-ul {
+    list-style-type: disc !important;
+    padding-left:1em !important;
+    margin-left:1em;
+}
+
+.custom-nested-ul {
+    list-style-type: circle !important;
+    padding-left:1em !important;
+    margin-left:1em;
+}
+
+.custom-note-ul {
+    padding-left:1em !important;
+    margin-left:1em;
+}
+
 .footer-text {
 	text-align:center;
 	color:#f8f9fa;

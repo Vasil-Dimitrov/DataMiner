@@ -9,7 +9,135 @@
 	<div class="container jumbotron">
 
 		<h5>Кратко описание</h5>
-		<p>Data Miner е приложение за намиране зависимост на поведение на потребители от лог файл.</p>
+		<p class="ml-3">Data Miner е приложение за намиране зависимост на поведение на потребители от лог файл чрез използването на
+			алгоритми за намиране на най-често достъпвани евенти (<a href="http://www.philippe-fournier-viger.com/spmf/LCM2.pdf" target="_blank">LCM</a>), 
+			рядко достъпвани евенти (<a href="https://link.springer.com/chapter/10.1007/978-3-642-23544-3_21" target="_blank">RP-Growth</a>) и седмичен времеви трафик (VTSA).</p>
+		
+		<h5>Приети файлови формати</h5>
+		<p class="ml-3">.csv, .txt</p>
+		
+		<h5>Приет вътрешен формат на лог файл</h5>
+		<ul class="custom-ul">
+		  <li>Един header</li>
+		  <li>Седем колони</li>
+		  <li>Данните в първата колона трябва да са във формат "ден/месец/година, час:минути" (с кавички)</li>
+		</ul>
+
+		<button type="button" class="btn btn-primary mt-1 mb-3" data-toggle="modal" data-target="#myModal">Пример</button>
+		<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-xl">
+		    <div class="modal-content">
+		        <div class="modal-body">
+		        		<table class="table table-striped">
+							<tr>
+								<th style="vertical-align:middle">Time</th>
+								<th style="vertical-align:middle">Event context</th>
+								<th style="vertical-align:middle">Component</th>
+								<th style="vertical-align:middle">Event name</th>
+								<th style="vertical-align:middle">Description</th>
+								<th style="vertical-align:middle">Origin</th>
+								<th style="vertical-align:middle">IP address</th>
+							</tr>
+							<tr>
+								<td>"7/05/15, 11:50"</td>
+								<td>Курс Физика</td>
+								<td>System</td>
+								<td>Course viewed</td>
+								<td>Някакво описание</td>
+								<td>web</td>
+								<td>212.2.212.212</td>
+							</tr>
+						</table>
+		        </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<h5>Настройки</h5>
+		<ul class="custom-ul">
+			<li><b>Най-често достъпвани евенти</b> - дали да се извършва анализ за най-често достъпвани евенти от лог файл.
+				<ul class="custom-nested-ul">
+					<li><b> Minimum Support</b> - минималния % потребители които трябва да са достъпвали един евент.</li>
+				</ul>
+			</li>
+			<li><b>Рядко достъпвани евенти</b> - дали да се извърши анализ за рядко достъпвани евенти от лог файл
+				<ul class="custom-nested-ul">
+					<li><b> Minimum Support</b> - горния % на достъпваност спрямо потребител за да се брои един евент за рядък.</li>
+					<li><b> Minimum Rare Support</b> - долния % на достъпваност спрямо потребител за да се брои един евент за рядък.
+						<ul class="custom-note-ul">
+							<li>* Minimum Support не трябва да е по-малка стойност от Minimum Rare Support.</li>
+							<li>** Комбинации влизащи в периодa, но съдържащи в себе си евент, който не се брои за рядък, не се броят за рядки.</li>
+							<li> <button type="button" class="btn btn-primary mt-1 mb-3" data-toggle="modal" data-target="#myModal2">Пример</button> </li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li><b>Седмичен времеви трафик</b> - дали да се извърши анализ на седмичния времеви трафик.
+				<ul class="custom-nested-ul">
+					<li><b> Hour Interval</b> - часовия интервал, на който всеки ден да се раздели в анализа.</li>
+				</ul>
+			</li>
+		</ul>
+		
+
+
+
+		
+		<div id="myModal2" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-lg">
+		    <div class="modal-content">
+		        <div class="modal-body">
+		        		
+					<table class="table table-striped mb-4">
+						<tr>
+							<th style="vertical-align:middle">Потребител</th>
+							<th style="vertical-align:middle">Достъпвани евенти</th>
+						</tr>
+						<tr> <td>1</td> <td>9 10 ...</td> </tr>
+						<tr> <td>2</td> <td>9 10 ...</td> </tr>
+						<tr> <td>3</td> <td>9 ...</td> </tr>
+						<tr> <td>4</td> <td>9 ...</td> </tr>
+						<tr> <td>...</td> <td>...</td> </tr>
+						<tr> <td>10</td> <td>...</td> </tr>
+					</table>
+					
+					<p>Резултат при <b>Minimum Support: 5</b> (евент трябва да е достъпван от по-малко от 5 потребителя) и 
+						<b>Minimum Rare Support: 1</b> (евент трябва да е достъпван от 1 или повече потребителя): </p>
+					<table class="table table-striped mb-4">
+						<tr>
+							<th style="vertical-align:middle">#</th>
+							<th style="vertical-align:middle">Евент</th>
+							<th style="vertical-align:middle">Брой достъпвания</th>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td>9 10</td>
+							<td>2</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>9</td>
+							<td>4</td>
+						</tr>
+					</table>
+					
+					<p>Резултат при <b>Minimum Support: 4</b> и <b>Minimum Rare Support: 1</b>:</p>
+					<table class="table table-striped">
+						<tr>
+							<th style="vertical-align:middle">#</th>
+							<th style="vertical-align:middle">Евент</th>
+							<th style="vertical-align:middle">Брой достъпвания</th>
+						</tr>
+					</table>
+					<p>Комбинацията 9 10 с брой достъпвания 2, въпреки че влиза в периода 1 < = х < 4, няма да се върне като резултат, 
+					тъй като в себе си съдържа не рядък елемент - евент 9 присъства в 4 на брой достъпвания, което го прави не рядък. </p>
+
+
+		        </div>
+		    </div>
+		  </div>
+		</div>
+	
 
 	</div> <!-- /jumbotron -->
 
