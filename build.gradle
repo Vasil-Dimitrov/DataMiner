@@ -4,7 +4,7 @@ plugins {
 	id "io.spring.dependency-management" version "1.0.8.RELEASE"
 	// new lombok
 	id "io.franzbecker.gradle-lombok" version "2.1"
-	id "com.github.rmee.jdk-bootstrap" version "1.0.20190725142159"
+	//id "com.github.rmee.jdk-bootstrap" version "1.0.20190725142159"
 }
 
 bootJar {
