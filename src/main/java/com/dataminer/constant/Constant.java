@@ -25,7 +25,7 @@ public class Constant {
 	public static final int LOG_FILE_VALID_SIZE = 7;
 
 	public static final String commonItemSetTitle = "Най-често достъпвани евенти";
-	public static final String rareItemSetTitle = "Най-рядко достъпвани евенти";
+	public static final String rareItemSetTitle = "Рядко достъпвани евенти";
 
 	public static final String debugFile = "contextPasquier99.txt";
 	//	public static final String debugReadFile = "logs_BCS37_20181103_UTF-8.csv";
