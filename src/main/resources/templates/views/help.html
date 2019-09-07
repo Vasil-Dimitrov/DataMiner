@@ -23,8 +23,38 @@
 		  <li>Данните в първата колона трябва да са във формат "ден/месец/година, час:минути" (с кавички)</li>
 		</ul>
 
-		<button type="button" class="btn btn-primary mt-1 mb-3" data-toggle="modal" data-target="#myModal">Пример</button>
-		<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<button type="button" class="btn btn-primary mt-1 mb-3" data-toggle="modal" data-target="#data-example">Пример</button>
+		
+		
+		<h5>Настройки</h5>
+		<ul class="custom-ul">
+			<li><b>Най-често достъпвани евенти</b> - дали да се извършва анализ за най-често достъпвани евенти от лог файл.
+				<ul class="custom-nested-ul">
+					<li><b> Minimum Support</b> - минималния % потребители които трябва да са достъпвали един евент.</li>
+				</ul>
+			</li>
+			<li><b>Рядко достъпвани евенти</b> - дали да се извърши анализ за рядко достъпвани евенти от лог файл
+				<ul class="custom-nested-ul">
+					<li><b> Minimum Support</b> - горния % на достъпваност спрямо потребител за да се брои един евент за рядък.</li>
+					<li><b> Minimum Rare Support</b> - долния % на достъпваност спрямо потребител за да се брои един евент за рядък.
+						<ul class="custom-note-ul">
+							<li>* Minimum Support не трябва да е по-малка стойност от Minimum Rare Support.</li>
+							<li>** Комбинации влизащи в периодa, но съдържащи в себе си евент, който не се брои за рядък, не се броят за рядки.</li>
+							<li> <button type="button" class="btn btn-primary mt-1 mb-3" data-toggle="modal" data-target="#prg-example">Пример</button> </li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li><b>Седмичен времеви трафик</b> - дали да се извърши анализ на седмичния времеви трафик.
+				<ul class="custom-nested-ul">
+					<li><b> Hour Interval</b> - часовия интервал, на който всеки ден да се раздели в анализа.</li>
+				</ul>
+			</li>
+		</ul>
+
+		<!-- MODAL DIALOGS BELOW -->
+
+		<div id="data-example" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		  <div class="modal-dialog modal-xl">
 		    <div class="modal-content">
 		        <div class="modal-body">
@@ -53,37 +83,7 @@
 		  </div>
 		</div>
 		
-		<h5>Настройки</h5>
-		<ul class="custom-ul">
-			<li><b>Най-често достъпвани евенти</b> - дали да се извършва анализ за най-често достъпвани евенти от лог файл.
-				<ul class="custom-nested-ul">
-					<li><b> Minimum Support</b> - минималния % потребители които трябва да са достъпвали един евент.</li>
-				</ul>
-			</li>
-			<li><b>Рядко достъпвани евенти</b> - дали да се извърши анализ за рядко достъпвани евенти от лог файл
-				<ul class="custom-nested-ul">
-					<li><b> Minimum Support</b> - горния % на достъпваност спрямо потребител за да се брои един евент за рядък.</li>
-					<li><b> Minimum Rare Support</b> - долния % на достъпваност спрямо потребител за да се брои един евент за рядък.
-						<ul class="custom-note-ul">
-							<li>* Minimum Support не трябва да е по-малка стойност от Minimum Rare Support.</li>
-							<li>** Комбинации влизащи в периодa, но съдържащи в себе си евент, който не се брои за рядък, не се броят за рядки.</li>
-							<li> <button type="button" class="btn btn-primary mt-1 mb-3" data-toggle="modal" data-target="#myModal2">Пример</button> </li>
-						</ul>
-					</li>
-				</ul>
-			</li>
-			<li><b>Седмичен времеви трафик</b> - дали да се извърши анализ на седмичния времеви трафик.
-				<ul class="custom-nested-ul">
-					<li><b> Hour Interval</b> - часовия интервал, на който всеки ден да се раздели в анализа.</li>
-				</ul>
-			</li>
-		</ul>
-		
-
-
-
-		
-		<div id="myModal2" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div id="prg-example" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		  <div class="modal-dialog modal-lg">
 		    <div class="modal-content">
 		        <div class="modal-body">
@@ -131,7 +131,6 @@
 					</table>
 					<p>Комбинацията 9 10 с брой достъпвания 2, въпреки че влиза в периода 1 < = х < 4, няма да се върне като резултат, 
 					тъй като в себе си съдържа не рядък елемент - евент 9 присъства в 4 на брой достъпвания, което го прави не рядък. </p>
-
 
 		        </div>
 		    </div>
