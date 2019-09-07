@@ -1,0 +1,19 @@
+<th:block th:fragment="itemset_list (itemset, titleText)">
+
+<div align="center" th:if="${itemset != null and !itemset.empty}">
+	<h2 th:text="${titleText}"></h2>	
+	<table class="table table-striped">
+		<tr>
+			<th style="width:4%; vertical-align:middle">#</th>
+			<th style="width:75%; vertical-align:middle">Евент</th>
+			<th style="width:26%; vertical-align:middle">Достъпваност спрямо потребители</th>
+		</tr>
+		<tr th:each="item, iter : ${itemset}">
+			<td th:text="${iter.index + 1}"></td>
+			<td th:text="${item.key}"></td>
+			<td th:text="${item.value} + '%'"></td>
+		</tr>
+	</table>
+</div>
+
+</th:block>
