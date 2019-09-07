@@ -82,7 +82,7 @@ public class LogFile {
 
 		LogFile logFile = new LogFile();
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(mFile.getInputStream(), StandardCharsets.ISO_8859_1))) {
-			// br.readLine();
+			br.readLine();
 			String line;
 			while ((line = br.readLine()) != null) {
 				logFile.addLine(new String(line.getBytes("Cp1252"), "Cp1251"), isVtsaOn);

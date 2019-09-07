@@ -8,12 +8,10 @@
 	<div class="container">
 
 		<div class="jumbotron">
-
-			<!-- File upload msg -->
-			<h2 th:text="${upload_message}"></h2>
+			<th:block th:replace="fragments/alert"></th:block>
 			
 			<!-- Custom upload file -->
-			<div class="container mb-5" th:if="${showUploadOption}">
+			<div class="container mb-5">
 				<form method="POST" action="/index" enctype="multipart/form-data">
 					<p>Качете избраният от вас .csv лог файл</p>
 					<div class="custom-file mb-3">
@@ -28,16 +26,20 @@
 			</div>
 
 			<!-- Common Item Set List -->
-			<th:block th:replace="fragments/itemsetList(itemset=${commonItemSet}, titleText=${commonItemSetTitle})"></th:block>
+			<th:block th:replace="fragments/itemset_list(itemset=${commonItemSet}, titleText=${commonItemSetTitle})"></th:block>
 			
 			<!-- Rare Item Set List -->
-			<div class="mt-5" th:include="fragments/itemsetList(itemset=${rareItemSet}, titleText=${rareItemSetTitle})"></div>
+			<div class="mt-5" th:include="fragments/itemset_list(itemset=${rareItemSet}, titleText=${rareItemSetTitle})"></div>
 			
 			<!-- Rare Item Set List -->
-			<th:block th:replace="fragments/barGraph1"></th:block>
-		</div>
+			<th:block th:replace="fragments/bar_graph"></th:block>
+			
+			<div th:if="${(commonItemSet != null and !commonItemSet.empty) OR (rareItemSet != null and !rareItemSet.empty) OR (surveyMap != null and !surveyMap.empty)}" align="center" >
+				<a class="btn btn-primary mt-4" download="results.txt" href="/download" role="button">Свали подробен анализ</a>
+			</div>
+		</div> <!-- /jumbotron -->
 
-	</div>
+	</div> <!-- /container -->
 
 	<th:block th:replace="fragments/footer"></th:block>
      

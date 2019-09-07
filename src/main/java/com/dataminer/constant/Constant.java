@@ -32,4 +32,6 @@ public class Constant {
 	public static final String debugReadFile = "logs_BCS37_20181103_UTF-8-small-bg.csv";
 
 	public static final int DEFAULT_ALGO_SETTINGS_ID = 1;
+
+	public static final String FILE_UPLOAD_DIR = System.getProperty("user.dir") + "\\upload_files\\" + "filename.txt";
 }

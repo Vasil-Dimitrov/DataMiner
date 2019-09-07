@@ -1,10 +1,16 @@
 package com.dataminer.controller;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import com.dataminer.algorithm.lcm.AlgoLCM;
@@ -61,34 +67,83 @@ public class HomeController extends BaseController {
 	@PostMapping(View.INDEX_URL)
 	public ModelAndView uploadFile(@RequestParam("filename") MultipartFile mFile, ModelAndView mav) {
 		AlgoSettings algoSettings = this.algoSettingsService.getDefaultAlgoSettings();
+		boolean debug = true;
 
 		if (algoSettings.areAllAlgorithmsDisabled()) {
 			// add error
 		} else {
-			LogFile logFile = LogFile.createFromMultipartFile(mFile, algoSettings.getVtsa());
-			int sessionsCount = logFile.getUserSessionList().size();
+			LogFile logFile = null;
+			int sessionsCount = 0;
+			if (!debug) {
+				logFile = LogFile.createFromMultipartFile(mFile, algoSettings.getVtsa());
+				sessionsCount = logFile.getUserSessionList().size();
+			}
 
 			if (algoSettings.getLcm()) {
-				Dataset dataset = new Dataset(logFile);
-				Itemsets itemsets = new AlgoLCM().runAlgorithm(algoSettings.getLcmMinSup(), dataset);
-
-				mav.addObject("commonItemSet", itemsets.getRelativeItemsets(sessionsCount));
-				mav.addObject("commonItemSetTitle", Constant.commonItemSetTitle);
+				if (debug) {
+					mav.addObject("commonItemSet", MockUtil.getMockUserEventList());
+					mav.addObject("commonItemSetTitle", Constant.commonItemSetTitle);
+				} else {
+					Dataset dataset = new Dataset(logFile);
+					Itemsets itemsets = new AlgoLCM().runAlgorithm(algoSettings.getLcmMinSup(), dataset);
+					mav.addObject("commonItemSet", itemsets.getRelativeItemsets(sessionsCount));
+					mav.addObject("commonItemSetTitle", Constant.commonItemSetTitle);
+				}
 			}
 			if (algoSettings.getRpg()) {
-				Itemsets itemsets = new AlgoRPGrowth().runAlgorithm(logFile, algoSettings.getRpgMinSup(), algoSettings.getRpgMinRareSup());
-
-				mav.addObject("rareItemSet", itemsets.getRelativeItemsets(sessionsCount));
-				mav.addObject("rareItemSetTitle", Constant.rareItemSetTitle);
+				if (debug) {
+					mav.addObject("rareItemSet", MockUtil.getMockRareUserEventList());
+					mav.addObject("rareItemSetTitle", Constant.rareItemSetTitle);
+				} else {
+					Itemsets itemsets = new AlgoRPGrowth().runAlgorithm(logFile, algoSettings.getRpgMinSup(),
+							algoSettings.getRpgMinRareSup());
+					mav.addObject("rareItemSet", itemsets.getRelativeItemsets(sessionsCount));
+					mav.addObject("rareItemSetTitle", Constant.rareItemSetTitle);
+				}
 			}
 			if (algoSettings.getVtsa()) {
-				// do something nigga
+				if (debug) {
+					mav.addObject("surveyMap", MockUtil.getMockTimeSomething());
+					mav.addObject("surveyMapMaxValue", MockUtil.getMockTimeSomethingMaxValue());
+				}
 			}
 		}
 
-		mav.addObject("upload_message", "You successfully uploaded " + mFile.getOriginalFilename() + "!");
+		// VASIL TODO: add proper logic here
+		String fileText = "This will be the text in a file!";
+		try {
+			File file = new File(Constant.FILE_UPLOAD_DIR);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			FileWriter fw = new FileWriter(file, false);
+			fw.write(fileText);
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		mav.addObject("success_msg", "Файл " + mFile.getOriginalFilename() + " бе успешно обработен!");
 		return view(View.INDEX_VIEW, mav);
 
 	}
 
+	@GetMapping("/download")
+	@ResponseBody
+	public FileSystemResource downloadFile() {
+		File file = new File(Constant.FILE_UPLOAD_DIR);
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+				FileWriter fw = new FileWriter(file, false);
+				fw.write("Файлът не бе намерен, моля опитайте да генерирате фалът отново чрез извършване на нов анализ от лог");
+				fw.close();
+			} catch (IOException e) {
+				log.debug("Something!");
+				e.printStackTrace();
+			}
+		}
+		return new FileSystemResource(new File(Constant.FILE_UPLOAD_DIR));
+	}
 }

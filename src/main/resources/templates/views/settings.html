@@ -7,12 +7,7 @@
 	<th:block th:replace="fragments/navbar"></th:block>
 	<div class="container">
 		<div class="jumbotron">
-			<div th:if="${success_msg != null and !success_msg.empty}" class="alert alert-success pb-0 text-center">
-				<p th:text="${success_msg}"></p>
-			</div>
-			<div th:if="${error_msg != null and !error_msg.empty}" class="alert alert-danger pb-0 text-center">
-				<p th:text="${error_msg}"></p>
-			</div>
+			<th:block th:replace="fragments/alert"></th:block>
 		
 			<h5>Конфигурация на алгоритмите за анализ</h5>
 		

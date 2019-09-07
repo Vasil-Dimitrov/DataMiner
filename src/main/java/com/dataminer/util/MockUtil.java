@@ -1,29 +1,25 @@
 package com.dataminer.util;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.dataminer.pojo.MockUserEvent;
-
 public class MockUtil {
-	public static List<MockUserEvent> getMockUserEventList() {
-		List<MockUserEvent> list = new ArrayList<>();
-		list.add(new MockUserEvent("Course: Програмни езици", 92));
-		list.add(new MockUserEvent("Course: Програмни езици, File: Пример", 60));
-		list.add(new MockUserEvent("Course: Програмни езици, File: Упражнение 1", 55));
-		list.add(new MockUserEvent("Course: Програмни езици, File: Лекция 1, File: Упражнение 1", 51));
+	public static Map<String, Integer> getMockUserEventList() {
+		Map<String, Integer> list = new LinkedHashMap<>();
+		list.put("Course: Програмни езици", 92);
+		list.put("Course: Програмни езици, File: Пример", 60);
+		list.put("Course: Програмни езици, File: Упражнение 1", 55);
+		list.put("Course: Програмни езици, File: Лекция 1, File: Упражнение 1", 51);
 		return list;
 	}
 
-	public static List<MockUserEvent> getMockRareUserEventList() {
-		List<MockUserEvent> list = new ArrayList<>();
-		list.add(new MockUserEvent(
+	public static Map<String, Integer> getMockRareUserEventList() {
+		Map<String, Integer> list = new LinkedHashMap<>();
+		list.put(
 				"Course: Програмни езици, File: Конспект 2014-2015, File: Generics (генетични типове) .Lambda expressions в C# и C++. Паралелни конструктори в С++",
-				5));
-		list.add(new MockUserEvent("File: Лекция 10, File: Software contractions", 10));
-		list.add(new MockUserEvent("File: Проект Weather Station, Course: Програмни езици", 16));
+				5);
+		list.put("File: Лекция 10, File: Software contractions", 10);
+		list.put("File: Проект Weather Station, Course: Програмни езици", 16);
 		return list;
 	}
 
