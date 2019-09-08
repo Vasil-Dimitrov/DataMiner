@@ -6,4 +6,5 @@ public class AlgoVTSA {
 	public void run(LogFile logFile) {
 
 	}
+
 }

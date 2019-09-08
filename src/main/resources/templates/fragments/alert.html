@@ -1,8 +1,12 @@
 <th:block th:fragment="alert">
 	<div th:if="${success_msg != null and !success_msg.empty}" class="alert alert-success pb-0 text-center">
-		<p th:text="${success_msg}"></p>
+		<ul class="mb-3">
+	       <li th:each="item : ${success_msg}" th:text="${item}"></li>
+	    </ul>
 	</div>
 	<div th:if="${error_msg != null and !error_msg.empty}" class="alert alert-danger pb-0 text-center">
-		<p th:text="${error_msg}"></p>
+		<ul class="mb-3">
+			<li th:each="item : ${error_msg}" th:text="${item}"></li>
+		</ul>
 	</div>
 </th:block>

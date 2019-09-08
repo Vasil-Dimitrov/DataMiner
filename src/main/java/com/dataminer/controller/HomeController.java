@@ -37,7 +37,6 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class HomeController extends BaseController {
 
-	@Autowired
 	private final AlgoSettingsService algoSettingsService;
 
 	@Autowired
@@ -50,6 +49,14 @@ public class HomeController extends BaseController {
 		return view(View.INDEX_VIEW, modelAndView);
 	}
 
+	/**
+	 * Method handling the log file upload to server as well as the analysis made by the
+	 * different algorithms
+	 *
+	 * @param mFile
+	 * @param mav
+	 * @return
+	 */
 	@PostMapping(View.INDEX_URL)
 	public ModelAndView uploadFile(@RequestParam(RequestAttribute.FILE) MultipartFile mFile, ModelAndView mav) {
 		AlgoSettings algoSettings = this.algoSettingsService.getDefaultAlgoSettings();
@@ -83,8 +90,7 @@ public class HomeController extends BaseController {
 				mav.addObject(RequestAttribute.RPG_DATA, MockUtil.getMockRareUserEventList());
 				mav.addObject(RequestAttribute.RPG_TITLE, Constant.RPG_TITLE_TEXT);
 			} else {
-				Itemsets itemsets = new AlgoRPGrowth().runAlgorithm(logFile, algoSettings.getRpgMinSup(),
-						algoSettings.getRpgMinRareSup());
+				Itemsets itemsets = new AlgoRPGrowth().runAlgorithm(logFile, algoSettings.getRpgMinSup(), algoSettings.getRpgMinRareSup());
 				mav.addObject(RequestAttribute.RPG_DATA, itemsets.getRelativeItemsets(sessionsCount));
 				mav.addObject(RequestAttribute.RPG_TITLE, Constant.RPG_TITLE_TEXT);
 			}
@@ -96,9 +102,8 @@ public class HomeController extends BaseController {
 			}
 		}
 
-
 		// VASIL TODO: add proper logic here
-		String fileText = "This will be the text in a file!";
+		String fileText = "This will be the text in a file! Тест за български език!";
 		try {
 			File file = new File(Constant.FILE_UPLOAD_DIR);
 			if (!file.exists()) {
@@ -117,6 +122,12 @@ public class HomeController extends BaseController {
 
 	}
 
+	/**
+	 * Method returning analysis_file.txt file with more detailed algorithm analysis made on
+	 * the uploaded log file
+	 *
+	 * @return
+	 */
 	@GetMapping(View.DOWNLOAD_URL)
 	@ResponseBody
 	public FileSystemResource downloadFile() {

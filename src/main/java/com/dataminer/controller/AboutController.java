@@ -15,11 +15,24 @@ import com.dataminer.constant.View;
 @Controller
 public class AboutController extends BaseController {
 
+	/**
+	 * Method returning the /about page with general info about the project and the author.
+	 * 
+	 * @param modelAndView
+	 * @return
+	 */
 	@GetMapping(View.ABOUT_URL)
 	public ModelAndView showAboutPage(ModelAndView modelAndView) {
 		return view(View.ABOUT_VIEW);
 	}
 
+	/**
+	 * Method returning the /resources page with info about the resources used in constructing
+	 * this application
+	 * 
+	 * @param modelAndView
+	 * @return
+	 */
 	@GetMapping(View.RESOURCES_URL)
 	public ModelAndView showResourcesPage(ModelAndView modelAndView) {
 		return view(View.RESOURCES_VIEW, modelAndView);

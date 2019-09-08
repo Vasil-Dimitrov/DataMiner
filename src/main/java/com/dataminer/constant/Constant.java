@@ -24,7 +24,7 @@ public class Constant {
 	public static final int LOG_FILE_IP_POSITION = 6;
 	public static final int LOG_FILE_VALID_SIZE = 7;
 
-	public static final String LCM_TITLE_TEXT = "Най-често достъпвани евенти";
+	public static final String LCM_TITLE_TEXT = "Често достъпвани евенти";
 	public static final String RPG_TITLE_TEXT = "Рядко достъпвани евенти";
 
 	public static final String debugFile = "contextPasquier99.txt";
@@ -32,6 +32,8 @@ public class Constant {
 	public static final String debugReadFile = "logs_BCS37_20181103_UTF-8-small-bg.csv";
 
 	public static final int DEFAULT_ALGO_SETTINGS_ID = 1;
+	
+	public static final String INVALID_SUPPORT_VALUE = "Невалидна въведена стойност! Позволени стойности: 0 < Х < 1";
 
-	public static final String FILE_UPLOAD_DIR = System.getProperty("user.dir") + "\\upload_files\\" + "filename.txt";
+	public static final String FILE_UPLOAD_DIR = System.getProperty("user.dir") + "\\upload_files\\" + "analysis_file.txt";
 }

@@ -27,12 +27,17 @@ public class DataMinerApplication {
 
 	}
 
-	public static void shortStart(String[] args) {
-		SpringApplication.run(DataMinerApplication.class, args);
+	public static ApplicationContext shortStart(String[] args) {
+		return SpringApplication.run(DataMinerApplication.class, args);
 	}
 
+	/**
+	 * Method used for listing all the beans at the start of the application.
+	 * 
+	 * @param args
+	 */
 	public static void longStart(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(DataMinerApplication.class, args);
+		ApplicationContext ctx = shortStart(args);
 
 		System.out.println("Beans:");
 		String[] beanNames = ctx.getBeanDefinitionNames();

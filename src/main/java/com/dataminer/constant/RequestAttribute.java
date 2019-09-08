@@ -20,5 +20,6 @@ public class RequestAttribute {
 	public static final String VTSA_DATA = "surveyMap";
 	public static final String VTSA_TITLE = "surveyMapMaxValue";
 	public static final String FILE = "filename";
+	public static final String ALGO_SETTINGS = "algoSettings";
 	// TODO VASIL: Add request attributes here eventually
 }

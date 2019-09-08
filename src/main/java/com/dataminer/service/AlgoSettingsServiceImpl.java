@@ -5,8 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dataminer.constant.Constant;
+import com.dataminer.controller.HomeController;
 import com.dataminer.pojo.entity.AlgoSettings;
 import com.dataminer.repository.AlgoSettingsRepository;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service class that implements Repository methods for working with {@link AlgoSettings}
@@ -15,6 +18,7 @@ import com.dataminer.repository.AlgoSettingsRepository;
  * @author Vasil.Dimitrov^2
  *
  */
+@Slf4j
 @Service
 @Transactional(readOnly = false)
 public class AlgoSettingsServiceImpl implements AlgoSettingsService {
@@ -32,7 +36,13 @@ public class AlgoSettingsServiceImpl implements AlgoSettingsService {
 
 	@Override
 	public boolean saveAlgoSettings(AlgoSettings algoSettings) {
-		return this.repository.save(algoSettings) != null;
+		AlgoSettings result = null;
+		try {
+			result = this.repository.save(algoSettings);
+		} catch (Exception e) {
+			log.error("Exception thrown trying to save algoSettings: \n" + algoSettings.toString(), e);
+		}
+		return result != null;
 	}
 
 }

@@ -15,6 +15,12 @@ import com.dataminer.constant.View;
 @Controller
 public class HelpController extends BaseController {
 
+	/**
+	 * Method returning the /help view
+	 * 
+	 * @param modelAndView
+	 * @return
+	 */
 	@GetMapping(View.HELP_URL)
 	public ModelAndView showHelpPage(ModelAndView modelAndView) {
 		return view(View.HELP_VIEW);
