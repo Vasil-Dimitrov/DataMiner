@@ -43,7 +43,6 @@ ul {
 	/*background-color: #003fbd;*/
 }
 
-
 .bg-primary-2 {
 	background-color:#42a5f5
 }
@@ -55,4 +54,10 @@ body, html {
 	background-repeat: repeat;
 	background-size: cover;
 }
+
+.v-center-modal{
+  top: 50%;
+}
+
+
 

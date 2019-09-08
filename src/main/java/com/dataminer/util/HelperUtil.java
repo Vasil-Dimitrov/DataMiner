@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,5 +35,9 @@ public class HelperUtil {
 		BigDecimal bd = BigDecimal.valueOf(value);
 		bd = bd.setScale(places, RoundingMode.HALF_UP);
 		return bd.doubleValue();
+	}
+	
+	public static boolean generateFile(List<String> results) {
+		return true;
 	}
 }

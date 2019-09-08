@@ -6,5 +6,9 @@ public class AlgoVTSA {
 	public void run(LogFile logFile) {
 
 	}
-
+	
+	public String getResults() {
+		
+		return null;
+	}
 }

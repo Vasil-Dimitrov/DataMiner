@@ -5,6 +5,12 @@ import com.dataminer.constant.Constant;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Intermediate class used for storing and converting the data from the uploaded log file to the {@link LogFile} object line by line
+ *
+ * @author Vasil.Dimitrov^2
+ *
+ */
 @Getter
 @Setter
 public class RawLineElements {

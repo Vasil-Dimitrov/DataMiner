@@ -19,10 +19,17 @@ import com.google.common.collect.HashBiMap;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Pojo class for storing the log data in an ordered and easy to analyze structure.
+ *
+ * @author Vasil.Dimitrov^2
+ *
+ */
 @Getter
 @Setter
-//TODO: add logger
+@Slf4j
 public class LogFile {
 	private List<UserSession> userSessionList = new ArrayList<>();
 	private BiMap<Integer, String> uniqueECMap = HashBiMap.create();
@@ -58,7 +65,7 @@ public class LogFile {
 					isVtsaOn ? LocalDateTime.parse(rawLine.getDateTime(), Constant.LOG_FILE_DATE_TIME_FORMAT) : null,
 							lastKey != null ? lastKey : this.uniqueECMap.inverse().get(rawLine.getEventContext()));
 		} catch (DateTimeParseException e) {
-			e.printStackTrace();
+			log.error("DateTimeParseException was thrown for " + rawLine.getDateTime(), e);
 			return;
 		}
 
@@ -66,7 +73,6 @@ public class LogFile {
 			int userSessionIndex = this.userSessionList.indexOf(newUserSession);
 			this.userSessionList.get(userSessionIndex).addUserSessionEvent(newUserSession);
 		} else {
-
 			this.userSessionList.add(newUserSession);
 		}
 	}
@@ -88,7 +94,7 @@ public class LogFile {
 				logFile.addLine(new String(line.getBytes("Cp1252"), "Cp1251"), isVtsaOn);
 			}
 		} catch (IOException e) {
-			System.err.println(e.getMessage());
+			log.error("Error creating LogFile from file " + mFile.getOriginalFilename(), e);
 		}
 
 		return logFile;
