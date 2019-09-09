@@ -388,6 +388,16 @@ public class AlgoRPGrowth {
 		System.out.println(" Total time ~ " + temps + " ms");
 		System.out.println("===================================================");
 	}
+	
+	/**
+	 * Method returning the stats for the algorithm run in a formatted string for saving onto
+	 * a file
+	 * 
+	 * @return
+	 */
+	public String getStatsForFile() {
+		return String.format("Време за анализ: %s ms \n\n",  this.endTime - this.startTimestamp);
+	}
 
 	/**
 	 * Get the number of transactions in the last transaction database read.

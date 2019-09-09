@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dataminer.pojo.LogFile;
 import com.dataminer.util.HelperUtil;
 
 import lombok.Getter;
@@ -54,12 +55,19 @@ public class Itemsets{
 		System.out.println(" --------------------------------");
 	}
 
-	public Map<int[], Double> getRelativeItemsets(int totalTransactionCount) {
-		Map<int[], Double> map = new LinkedHashMap<>();
+
+	public Map<String, Double> getRelativeItemsets(LogFile logFile) {
+		Map<String, Double> map = new LinkedHashMap<>();
+		int totalTransactionCount = logFile.getUserSessionList().size();
+
 		for (List<Itemset> level : this.levels) {
 			for (Itemset itemset : level) {
+				String eventSet = logFile.getUniqueECMap().get(itemset.getItemset()[0]);
+				for (int i = 1; i < itemset.getItemset().length; i++) {
+					eventSet += ", " + logFile.getUniqueECMap().get(itemset.getItemset()[i]);
+				}
 				double percentage = (double) (100 * itemset.getAbsoluteSupport()) / totalTransactionCount;
-				map.put(itemset.getItemset(), HelperUtil.round(percentage, 2));
+				map.put(eventSet, HelperUtil.round(percentage, 2));
 			}
 		}
 		return map;
@@ -81,6 +89,25 @@ public class Itemsets{
 				Collections.sort(level);
 			}
 		}
+	}
+	
+	/**
+	 * Method returning the analysis in a formatted string for saving onto a file
+	 * 
+	 * @return
+	 */
+	public String getAnalysisForFile(LogFile logFile) {
+		StringBuilder str = new StringBuilder();
+		str.append("======= " + name + " ======= \n");
+		str.append("#		|		Евент		|		Достъпваност спрямо потребители\n");
+
+		int i = 1;
+		for (Map.Entry<String, Double> entry : getRelativeItemsets(logFile).entrySet()) {
+			str.append(String.format("%s		|		%s		|		%s%%\n", i, entry.getKey(), entry.getValue()));
+			i++;
+		}
+
+		return str.toString();
 	}
 
 	public void addItemset(Itemset itemset, int k) {
