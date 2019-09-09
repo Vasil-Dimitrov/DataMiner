@@ -40,7 +40,7 @@ public class LogFile {
 	 *
 	 * @param line
 	 */
-	public void addLine(String line, boolean isVtsaOn) {
+	public void addLine(String line, boolean isVtsaOn) throws DateTimeParseException {
 		String elements[] = line.split("\t");
 		Integer lastKey = null;
 		if (elements.length != Constant.LOG_FILE_VALID_SIZE) {
@@ -60,14 +60,14 @@ public class LogFile {
 		}
 
 		UserSession newUserSession;
-		try {
-			newUserSession = new UserSession(rawLine.getIp(),
-					isVtsaOn ? LocalDateTime.parse(rawLine.getDateTime(), Constant.LOG_FILE_DATE_TIME_FORMAT) : null,
-							lastKey != null ? lastKey : this.uniqueECMap.inverse().get(rawLine.getEventContext()));
-		} catch (DateTimeParseException e) {
-			log.error("DateTimeParseException was thrown for " + rawLine.getDateTime(), e);
-			return;
-		}
+//		try {
+		newUserSession = new UserSession(rawLine.getIp(),
+				isVtsaOn ? LocalDateTime.parse(rawLine.getDateTime(), Constant.LOG_FILE_DATE_TIME_FORMAT) : null,
+				lastKey != null ? lastKey : this.uniqueECMap.inverse().get(rawLine.getEventContext()));
+//		} catch (DateTimeParseException e) {
+//			log.error("DateTimeParseException was thrown for " + rawLine.getDateTime(), e);
+//			return;
+//		}
 
 		if (this.userSessionList.contains(newUserSession)) {
 			int userSessionIndex = this.userSessionList.indexOf(newUserSession);
@@ -95,6 +95,10 @@ public class LogFile {
 			}
 		} catch (IOException e) {
 			log.error("Error creating LogFile from file " + mFile.getOriginalFilename(), e);
+			logFile = null;
+		} catch (DateTimeParseException e2) {
+			log.error("Error trying to convert string to datetime from file: " + mFile.getOriginalFilename(), e2);
+			logFile = null;
 		}
 
 		return logFile;

@@ -36,4 +36,7 @@ public class Constant {
 	public static final String INVALID_SUPPORT_VALUE = "Невалидна въведена стойност! Позволени стойности: 0 < Х < 1";
 
 	public static final String FILE_UPLOAD_DIR = System.getProperty("user.dir") + "\\upload_files\\" + "analysis_file.txt";
+
+	public static final String NO_FILE_ERROR = "Лог файлът не бе намерен.";
+	public static final String BAD_FILE_ERROR = "Възникна грешка по време на обработка на файла.";
 }

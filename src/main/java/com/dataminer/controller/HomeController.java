@@ -74,7 +74,16 @@ public class HomeController extends BaseController {
 			return view(View.INDEX_VIEW, mav);
 		}
 
+		if (mFile.isEmpty()) {
+			mav.addObject(RequestAttribute.ERROR_MSG, Constant.NO_FILE_ERROR);
+			return view(View.INDEX_VIEW, mav);
+		}
 		LogFile logFile = LogFile.createFromMultipartFile(mFile, algoSettings.getVtsa());
+
+		if (logFile == null) {
+			mav.addObject(RequestAttribute.ERROR_MSG, Constant.BAD_FILE_ERROR);
+			return view(View.INDEX_VIEW, mav);
+		}
 
 		StringBuilder statsDataForFileSave = new StringBuilder();
 		if (algoSettings.getLcm()) {
