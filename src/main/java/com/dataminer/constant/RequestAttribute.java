@@ -17,8 +17,8 @@ public class RequestAttribute {
 	public static final String LCM_TITLE = "commonItemSetTitle";
 	public static final String RPG_DATA = "rareItemSet";
 	public static final String RPG_TITLE = "rareItemSetTitle";
-	public static final String VTSA_DATA = "surveyMap";
-	public static final String VTSA_TITLE = "surveyMapMaxValue";
+	public static final String VTSA_DATA = "vtsa_map";
+	public static final String VTSA_MAX_OCCURRENCE = "vtsa_fragment_max_occurrence";
 	public static final String FILE = "filename";
 	public static final String ALGO_SETTINGS = "algoSettings";
 	// TODO VASIL: Add request attributes here eventually

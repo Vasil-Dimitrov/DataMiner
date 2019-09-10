@@ -8,20 +8,31 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DayFraction {
-	Integer dayOfWeek;
-	Integer count;
+	private int dayOfWeek;
+	private int occurrence;
 
-	LocalTime fromTime;
-	LocalTime toTime;
+	private LocalTime fromTime;
+	private LocalTime toTime;
 
 	public DayFraction(int dayOfWeek, int fromHour, int toHour) {
 		this.dayOfWeek = dayOfWeek;
-		this.count = 0;
 		this.fromTime = LocalTime.of(fromHour, 0);
-		this.toTime = LocalTime.of(toHour, 0);
+		this.toTime = LocalTime.of(toHour - 1, 59);
 	}
-
+	
+	public String getDayOfWeekBG() {
+		return  DayOfWeekBG.of(this.dayOfWeek).getShortName();
+	}
+	
+	public String getTimePeriod() {
+		return String.format("%s-%s", this.fromTime, this.toTime);
+	}
+	
 	public String getDisplayName() {
-		return String.format("%s %s-%s", DayOfWeekBG.of(this.dayOfWeek), this.fromTime, this.toTime);
+		return String.format("%s %s", getDayOfWeekBG(), getTimePeriod());
+	}
+	
+	public void addOccurremce() {
+		this.occurrence++;
 	}
 }

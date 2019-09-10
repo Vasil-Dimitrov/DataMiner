@@ -24,7 +24,7 @@ public class AlgoLCM {
 
 	long startTimestamp;
 	long endTimestamp;
-	int minsupRelative;
+	int minsupRelative; // minimum support count needed
 
 	// Buckets for occurrence delivery
 	// Recall that each bucket correspond to an item

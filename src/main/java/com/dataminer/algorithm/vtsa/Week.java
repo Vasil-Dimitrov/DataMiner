@@ -28,28 +28,4 @@ public class Week {
 
 		return true;
 	}
-
-	/**
-	 * Creates a Week with DayFraction objects based on the hour interval passed. Make sure to
-	 * call Week.isHourIntervalValid(hourInterval) first to avoid any errors. The validation
-	 * has been excluded from this method for performance.
-	 *
-	 * @param hourInterval
-	 * @return
-	 */
-	public static Week getWeekWithHourInterval(Integer hourInterval) {
-		int dayPerWeek = 7;
-		int intervalsPerDay = 24 / hourInterval;
-		List<DayFraction> dayFraction = new ArrayList<>();
-
-		for (int day = 1; day <= dayPerWeek; day++) {
-			for (int interval = 1; interval <= intervalsPerDay; interval++) {
-				int fromHour = (interval - 1) * hourInterval;
-				int toHour = interval * hourInterval;
-				dayFraction.add(new DayFraction(day, fromHour, toHour));
-			}
-		}
-
-		return new Week(dayFraction);
-	}
 }

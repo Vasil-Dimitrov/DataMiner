@@ -20,6 +20,7 @@ import com.dataminer.algorithm.lcm.AlgoLCM;
 import com.dataminer.algorithm.lcm.Dataset;
 import com.dataminer.algorithm.pattern.Itemsets;
 import com.dataminer.algorithm.rpgrowth.AlgoRPGrowth;
+import com.dataminer.algorithm.vtsa.AlgoVTSA;
 import com.dataminer.constant.Constant;
 import com.dataminer.constant.RequestAttribute;
 import com.dataminer.constant.View;
@@ -112,8 +113,15 @@ public class HomeController extends BaseController {
 			}
 		}
 		if (algoSettings.getVtsa()) {
-			mav.addObject(RequestAttribute.VTSA_DATA, MockUtil.getMockTimeSomething());
-			mav.addObject(RequestAttribute.VTSA_TITLE, MockUtil.getMockTimeSomethingMaxValue());
+			AlgoVTSA algo = new AlgoVTSA();
+			algo.run(logFile, algoSettings.getVtsaHourInterval());
+			Map<String, Double> resultItemset = algo.getResults(logFile.getTransactionsCount());
+			mav.addObject(RequestAttribute.VTSA_DATA, resultItemset);
+			mav.addObject(RequestAttribute.VTSA_MAX_OCCURRENCE, algo.getMaxValue());
+			
+			if(!CollectionUtils.isEmpty(resultItemset) ) {
+				statsDataForFileSave.append(algo.getFileStringData(logFile.getTransactionsCount()));
+			}
 		}
 		
 		
@@ -136,7 +144,7 @@ public class HomeController extends BaseController {
 		}
 		if (algoSettings.getVtsa()) {
 			mav.addObject(RequestAttribute.VTSA_DATA, MockUtil.getMockTimeSomething());
-			mav.addObject(RequestAttribute.VTSA_TITLE, MockUtil.getMockTimeSomethingMaxValue());
+			mav.addObject(RequestAttribute.VTSA_MAX_OCCURRENCE, MockUtil.getMockTimeSomethingMaxValue());
 		}
 		mav.addObject(RequestAttribute.SUCCESS_MSG, "Файл " + mFile.getOriginalFilename() + " бе успешно обработен!");
 

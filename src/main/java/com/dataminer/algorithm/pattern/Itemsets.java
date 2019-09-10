@@ -58,7 +58,7 @@ public class Itemsets{
 
 	public Map<String, Double> getRelativeItemsets(LogFile logFile) {
 		Map<String, Double> map = new LinkedHashMap<>();
-		int totalTransactionCount = logFile.getUserSessionList().size();
+		int totalUserSessionsCount = logFile.getUserSessionList().size();
 
 		for (List<Itemset> level : this.levels) {
 			for (Itemset itemset : level) {
@@ -66,7 +66,7 @@ public class Itemsets{
 				for (int i = 1; i < itemset.getItemset().length; i++) {
 					eventSet += ", " + logFile.getUniqueECMap().get(itemset.getItemset()[i]);
 				}
-				double percentage = (double) (100 * itemset.getAbsoluteSupport()) / totalTransactionCount;
+				double percentage = (double) (100 * itemset.getAbsoluteSupport()) / totalUserSessionsCount;
 				map.put(eventSet, HelperUtil.round(percentage, 2));
 			}
 		}

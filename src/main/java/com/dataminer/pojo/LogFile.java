@@ -34,6 +34,7 @@ public class LogFile {
 	private List<UserSession> userSessionList = new ArrayList<>();
 	private BiMap<Integer, String> uniqueECMap = HashBiMap.create();
 	private Map<Integer, Integer> keyCount = new HashMap<>();
+	private int transactionsCount;
 
 	/**
 	 * Method for adding a log line to the {@link LogFile} object
@@ -41,6 +42,7 @@ public class LogFile {
 	 * @param line
 	 */
 	public void addLine(String line, boolean isVtsaOn) throws DateTimeParseException {
+		transactionsCount++;
 		String elements[] = line.split("\t");
 		Integer lastKey = null;
 		if (elements.length != Constant.LOG_FILE_VALID_SIZE) {
