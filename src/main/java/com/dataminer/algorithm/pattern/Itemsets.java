@@ -99,7 +99,7 @@ public class Itemsets{
 	public String getAnalysisForFile(LogFile logFile) {
 		StringBuilder str = new StringBuilder();
 		str.append("======= " + name + " ======= \n");
-		str.append("#		|		Евент		|		Достъпваност спрямо потребители\n");
+		str.append("#		|		Събития		|		Достъпваност спрямо потребители\n");
 
 		int i = 1;
 		for (Map.Entry<String, Double> entry : getRelativeItemsets(logFile).entrySet()) {

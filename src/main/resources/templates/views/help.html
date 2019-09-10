@@ -10,8 +10,8 @@
 
 		<h5>Кратко описание</h5>
 		<p class="ml-3">Data Miner е приложение за намиране зависимост на поведение на потребители от лог файл чрез използването на
-			алгоритми за намиране на най-често достъпвани евенти (<a href="http://www.philippe-fournier-viger.com/spmf/LCM2.pdf" target="_blank">LCM</a>), 
-			рядко достъпвани евенти (<a href="https://link.springer.com/chapter/10.1007/978-3-642-23544-3_21" target="_blank">RP-Growth</a>) и седмичен времеви трафик (VTSA).</p>
+			алгоритми за намиране на най-често достъпвани събития (<a href="http://www.philippe-fournier-viger.com/spmf/LCM2.pdf" target="_blank">LCM</a>), 
+			рядко достъпвани събития (<a href="https://link.springer.com/chapter/10.1007/978-3-642-23544-3_21" target="_blank">RP-Growth</a>) и седмичен времеви трафик (VTSA).</p>
 		
 		<h5>Приети файлови формати</h5>
 		<p class="ml-3">.csv, .txt</p>
@@ -28,27 +28,27 @@
 		
 		<h5>Настройки</h5>
 		<ul class="custom-ul">
-			<li><b>Най-често достъпвани евенти</b> - дали да се извършва анализ за най-често достъпвани евенти от лог файл.
+			<li><b>Най-често достъпвани събития</b> - дали да се извършва анализ за най-често достъпвани събития от лог файл.
 				<ul class="custom-nested-ul">
-					<li><b> Minimum Support</b> - минималния % потребители които трябва да са достъпвали един евент.
+					<li><b> Minimum Support</b> - минималния % потребители които трябва да са достъпвали събитието/множеството от събития.
 						<ul class="custom-note-ul">
 							<li><i>Позволени стойности: 0 < х < 1</i></li>
 						</ul>
 					</li>
 				</ul>
 			</li>
-			<li><b>Рядко достъпвани евенти</b> - дали да се извърши анализ за рядко достъпвани евенти от лог файл
+			<li><b>Рядко достъпвани събития</b> - дали да се извърши анализ за рядко достъпвани събития от лог файл
 				<ul class="custom-nested-ul">
-					<li><b> Minimum Support</b> - горния % на достъпваност спрямо потребител за да се брои един евент за рядък.
+					<li><b> Minimum Support</b> - горния % на достъпваност спрямо потребител за да се брои едно събитие/множество от събития за рядко.
 						<ul class="custom-note-ul">
 							<li><i>Позволени стойности: 0 < х < 1</i></li>
 						</ul>
 					</li>
-					<li><b> Minimum Rare Support</b> - долния % на достъпваност спрямо потребител за да се брои един евент за рядък.
+					<li><b> Minimum Rare Support</b> - долния % на достъпваност спрямо потребител за да се брои едно събитие/множество от събития за рядко.
 						<ul class="custom-note-ul">
 							<li><i>Позволени стойности: 0 < х < 1</i></li>
 							<li><i>Minimum Support не трябва да е по-малка стойност от Minimum Rare Support.</i></li>
-							<li><i>Комбинации влизащи в периодa, но съдържаща в себе си индивидуални евенти, който не се броят за рядки, не се броят за рядки.</i></li>
+							<li><i>Комбинации влизащи в периодa, но съдържаща в себе си индивидуални събития, който не се броят за рядки, не се броят за рядки.</i></li>
 							<li> <button type="button" class="btn btn-primary mt-1 mb-3" data-toggle="modal" data-target="#prg-example">Пример</button> </li>
 						</ul>
 					</li>
@@ -104,7 +104,7 @@
 					<table class="table table-striped mb-4">
 						<tr>
 							<th style="vertical-align:middle">Потребител</th>
-							<th style="vertical-align:middle">Достъпвани евенти</th>
+							<th style="vertical-align:middle">Достъпвани събития</th>
 						</tr>
 						<tr> <td>1</td> <td>9 10 ...</td> </tr>
 						<tr> <td>2</td> <td>9 10 ...</td> </tr>
@@ -114,12 +114,12 @@
 						<tr> <td>10</td> <td>...</td> </tr>
 					</table>
 					
-					<p>Резултат при <b>Minimum Support: 4</b> (евент трябва да е достъпван от по-малко от 4 потребителя) и 
-						<b>Minimum Rare Support: 1</b> (евент трябва да е достъпван от 1 или повече потребителя): </p>
+					<p>Резултат при <b>Minimum Support: 4</b> (събитие трябва да е достъпвано от по-малко от 4 потребители) и 
+						<b>Minimum Rare Support: 1</b> (събитие трябва да е достъпван от 1 или повече потребители): </p>
 					<table class="table table-striped mb-4">
 						<tr>
 							<th style="vertical-align:middle">#</th>
-							<th style="vertical-align:middle">Евент</th>
+							<th style="vertical-align:middle">Събития</th>
 							<th style="vertical-align:middle">Брой достъпвания</th>
 						</tr>
 						<tr>
@@ -143,12 +143,12 @@
 					<table class="table table-striped">
 						<tr>
 							<th style="vertical-align:middle">#</th>
-							<th style="vertical-align:middle">Евент</th>
+							<th style="vertical-align:middle">Събития</th>
 							<th style="vertical-align:middle">Брой достъпвания</th>
 						</tr>
 					</table>
 					<p>Комбинацията 9 10 с брой достъпвания 2, въпреки че влиза в периода 1 < = х < 4 , няма да се върне като резултат, 
-					тъй като в себе си не съдържа поне един рядък елемент - евент 9 и 10 поотделно присъстват в 3 на брой достъпвания, което ги прави не рядки. </p>
+					тъй като в себе си не съдържа поне един рядък елемент - събития 9 и 10 поотделно присъстват в 3 на брой достъпвания, което ги прави не рядки. </p>
 
 		        </div>
 		    </div>

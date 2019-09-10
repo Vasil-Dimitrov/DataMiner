@@ -69,13 +69,13 @@ public class AlgoSettings {
 			vtsa = false;
 
 		if(lcmMinSup == null || lcmMinSup <= 0 || lcmMinSup >= 1)
-			errors.add("Minimum Support за Най-често достъпвани евенти: " + Constant.INVALID_SUPPORT_VALUE);
+			errors.add("Minimum Support за Най-често достъпвани събития: " + Constant.INVALID_SUPPORT_VALUE);
 		if(rpgMinSup == null || rpgMinSup <= 0 || rpgMinSup >= 1)
-			errors.add("Minimum Support за Рядко достъпвани евенти: " + Constant.INVALID_SUPPORT_VALUE);
+			errors.add("Minimum Support за Рядко достъпвани събития: " + Constant.INVALID_SUPPORT_VALUE);
 		if(rpgMinRareSup == null || rpgMinRareSup <= 0 || rpgMinRareSup >= 1)
-			errors.add("Minimum Rare Support за Рядко достъпвани евенти: " + Constant.INVALID_SUPPORT_VALUE);
+			errors.add("Minimum Rare Support за Рядко достъпвани събития: " + Constant.INVALID_SUPPORT_VALUE);
 		if(rpgMinRareSup != null && rpgMinSup != null && rpgMinRareSup >= rpgMinSup)
-			errors.add("Рядко достъпвани евенти:: Minimum Rare Support трябва да бъде по-малка стойност от Minimum Support");
+			errors.add("Рядко достъпвани събития: Minimum Rare Support трябва да бъде по-малка стойност от Minimum Support");
 		if(vtsaHourInterval == null || vtsaHourInterval < 4 || vtsaHourInterval > 24 || 24 % vtsaHourInterval != 0)
 			errors.add("Hour Interval: Невалидна въведена стойност! Позволени стойности: 4 <= Х <= 24 и 24/х трябва да дава цяло число.");
 		

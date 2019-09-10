@@ -24,8 +24,8 @@ public class Constant {
 	public static final int LOG_FILE_IP_POSITION = 6;
 	public static final int LOG_FILE_VALID_SIZE = 7;
 
-	public static final String LCM_TITLE_TEXT = "Често достъпвани евенти";
-	public static final String RPG_TITLE_TEXT = "Рядко достъпвани евенти";
+	public static final String LCM_TITLE_TEXT = "Често достъпвани събития";
+	public static final String RPG_TITLE_TEXT = "Рядко достъпвани събития";
 
 	public static final String debugFile = "contextPasquier99.txt";
 	//	public static final String debugReadFile = "logs_BCS37_20181103_UTF-8.csv";
