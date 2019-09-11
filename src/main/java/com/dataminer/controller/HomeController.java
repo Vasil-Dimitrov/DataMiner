@@ -172,6 +172,6 @@ public class HomeController extends BaseController {
 				log.error("Exception occurred trying to recreate a misssing analysis file!", e);
 			}
 		}
-		return new FileSystemResource(new File(Constant.FILE_UPLOAD_DIR));
+		return new FileSystemResource(file);
 	}
 }
