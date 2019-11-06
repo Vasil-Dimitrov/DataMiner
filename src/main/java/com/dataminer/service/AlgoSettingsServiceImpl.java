@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dataminer.constant.Constant;
-import com.dataminer.controller.HomeController;
 import com.dataminer.pojo.entity.AlgoSettings;
 import com.dataminer.repository.AlgoSettingsRepository;
 
